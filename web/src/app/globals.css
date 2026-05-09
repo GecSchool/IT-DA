@@ -94,14 +94,23 @@
   --font-sans: var(--font-primary), var(--font-geist-sans), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
   --text-xs: var(--font-size-xs);
+  --text-xs--line-height: 1.45;
   --text-sm: var(--font-size-sm);
+  --text-sm--line-height: 1.45;
   --text-md: var(--font-size-md);
+  --text-md--line-height: 1.5;
   --text-base: var(--font-size-base);
+  --text-base--line-height: 1.5;
   --text-lg: var(--font-size-lg);
+  --text-lg--line-height: 1.45;
   --text-xl: var(--font-size-xl);
+  --text-xl--line-height: 1.4;
   --text-2xl: var(--font-size-2xl);
+  --text-2xl--line-height: 1.3;
   --text-3xl: var(--font-size-3xl);
+  --text-3xl--line-height: 1.25;
   --text-4xl: var(--font-size-4xl);
+  --text-4xl--line-height: 1.2;
 
   --spacing-xs: 4px;
   --spacing-sm: 8px;

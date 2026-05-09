@@ -8,6 +8,7 @@ export { EmptyState } from "./empty-state";
 export { Heading } from "./heading";
 export { IconButton } from "./icon-button";
 export { Input } from "./input";
+export { Logo } from "./logo";
 export { PhotoTile } from "./photo-tile";
 export { ProgressBar } from "./progress-bar";
 export { RadioGroup } from "./radio-group";

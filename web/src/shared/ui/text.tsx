@@ -3,7 +3,7 @@ import { createElement, type HTMLAttributes, type ReactNode } from "react";
 
 import { cn } from "@/shared/lib/cn";
 
-const textVariants = cva("leading-normal tracking-normal", {
+const textVariants = cva("tracking-normal", {
   variants: {
     size: {
       xs: "text-xs",

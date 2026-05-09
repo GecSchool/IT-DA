@@ -58,7 +58,7 @@ export function Button({
       {...props}
     >
       {leftIcon ? <span className="shrink-0">{leftIcon}</span> : null}
-      <span className="min-w-0 truncate">{children}</span>
+      <span className="min-w-0 leading-[1.2]">{children}</span>
       {rightIcon ? <span className="shrink-0">{rightIcon}</span> : null}
     </button>
   );
