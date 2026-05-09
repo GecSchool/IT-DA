@@ -45,7 +45,7 @@ src/features/
   dogs/
   posts/
   match/
-  applications/
+  adoptions/
 ```
 
 대부분의 화면, 훅, 서버 상태, 데이터 접근 코드는 이 안에 둡니다.

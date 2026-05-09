@@ -576,14 +576,12 @@ components:
 
     AuthMeResponse:
       type: object
-      required: [userId, nickname, isProfileComplete]
+      required: [userId, nickname]
       properties:
         userId:
           type: integer
         nickname:
           type: string
-        isProfileComplete:
-          type: boolean
 
     NicknameCheckResponse:
       type: object

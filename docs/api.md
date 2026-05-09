@@ -52,8 +52,7 @@
 ```json
 {
     "userId": 1,
-    "nickname": "string",
-    "isProfileComplete": true
+    "nickname": "string"
 }
 ```
 
