@@ -1,0 +1,1271 @@
+openapi: 3.0.3
+info:
+  title: Foster Adoption Matching API
+  version: 0.1.0
+  description: 유기동물 임시보호 기반 입양 매칭 서비스 API 명세
+
+servers:
+  - url: http://localhost:8080
+    description: Local
+
+tags:
+  - name: Auth
+  - name: User
+  - name: Dog
+  - name: Post
+  - name: Match
+  - name: Adoption
+
+paths:
+  /auth/google:
+    get:
+      tags: [Auth]
+      summary: 구글 OAuth 시작
+      responses:
+        "302":
+          description: 구글 로그인 페이지로 리다이렉트
+
+  /auth/google/callback:
+    get:
+      tags: [Auth]
+      summary: 구글 OAuth 콜백 처리
+      responses:
+        "200":
+          description: 로그인 성공
+          headers:
+            Set-Cookie:
+              description: httpOnly refreshToken 쿠키
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthCallbackResponse"
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: 토큰 재발급
+      description: httpOnly 쿠키의 refreshToken을 사용해 accessToken을 재발급한다.
+      responses:
+        "200":
+          description: 토큰 재발급 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessTokenResponse"
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: 세션 유효성 확인
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 세션 유효
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthMeResponse"
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: 로그아웃
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 로그아웃 성공 및 쿠키 만료 처리
+
+  /auth/account:
+    delete:
+      tags: [Auth]
+      summary: 회원탈퇴
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 회원탈퇴 성공 및 쿠키 만료 처리
+
+  /users/check-nickname:
+    get:
+      tags: [User]
+      summary: 닉네임 중복 확인
+      parameters:
+        - name: nickname
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 닉네임 중복 여부
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NicknameCheckResponse"
+
+  /users/onboarding:
+    post:
+      tags: [User]
+      summary: 초기 정보 등록
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserOnboardingRequest"
+      responses:
+        "200":
+          description: 초기 정보 등록 성공
+
+  /users/me:
+    get:
+      tags: [User]
+      summary: 내 프로필 조회
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 내 프로필
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfileResponse"
+    put:
+      tags: [User]
+      summary: 라이프스타일 등록/수정
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserProfileUpdateRequest"
+      responses:
+        "200":
+          description: 프로필 수정 성공
+
+  /dogs:
+    post:
+      tags: [Dog]
+      summary: 강아지 등록
+      description: size는 백엔드가 weight를 기준으로 계산한다. imageUrls 배열 순서가 강아지 이미지 노출 순서다.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DogCreateRequest"
+      responses:
+        "200":
+          description: 강아지 등록 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DogCreateResponse"
+
+  /dogs/me:
+    get:
+      tags: [Dog]
+      summary: 내 강아지 목록 조회
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 내 강아지 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MyDogSummary"
+
+  /dogs/recent:
+    get:
+      tags: [Dog]
+      summary: 피드 상단 최근 강아지 목록
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: 최근 강아지 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RecentDogSummary"
+
+  /dogs/{dogId}:
+    get:
+      tags: [Dog]
+      summary: 강아지 상세 조회
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/DogId"
+      responses:
+        "200":
+          description: 강아지 상세
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DogDetail"
+    put:
+      tags: [Dog]
+      summary: 강아지 정보 수정
+      description: imageUrls는 수정 후 최종 강아지 이미지 목록이다. 요청에서 빠진 기존 URL은 삭제된 것으로 처리하고 배열 순서대로 sort_order를 다시 저장한다.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/DogId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DogCreateRequest"
+      responses:
+        "200":
+          description: 강아지 정보 수정 성공
+    delete:
+      tags: [Dog]
+      summary: 강아지 삭제
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/DogId"
+      responses:
+        "200":
+          description: 강아지 삭제 성공
+
+  /dogs/{dogId}/complete:
+    patch:
+      tags: [Dog]
+      summary: 입양완료 처리
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/DogId"
+      responses:
+        "200":
+          description: 입양완료 처리 성공
+
+  /dogs/{dogId}/posts:
+    get:
+      tags: [Post]
+      summary: 특정 강아지의 게시물 목록 조회
+      parameters:
+        - $ref: "#/components/parameters/DogId"
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: 특정 강아지의 게시물 목록
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DogPostListResponse"
+
+  /posts:
+    get:
+      tags: [Post]
+      summary: 피드 목록 조회
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: 피드 목록
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostFeedResponse"
+    post:
+      tags: [Post]
+      summary: 게시물 작성
+      description: imageUrls 배열 순서가 게시물 이미지 노출 순서다.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostCreateRequest"
+      responses:
+        "200":
+          description: 게시물 작성 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostCreateResponse"
+
+  /posts/{postId}:
+    get:
+      tags: [Post]
+      summary: 게시물 상세 조회
+      description: 비로그인 요청 시 isLiked는 false다.
+      parameters:
+        - $ref: "#/components/parameters/PostId"
+      responses:
+        "200":
+          description: 게시물 상세
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostDetail"
+    put:
+      tags: [Post]
+      summary: 게시물 수정
+      description: imageUrls는 수정 후 최종 게시물 이미지 목록이다. 요청에서 빠진 기존 URL은 삭제된 것으로 처리하고 배열 순서대로 sort_order를 다시 저장한다.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PostId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostUpdateRequest"
+      responses:
+        "200":
+          description: 게시물 수정 성공
+    delete:
+      tags: [Post]
+      summary: 게시물 삭제
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PostId"
+      responses:
+        "200":
+          description: 게시물 삭제 성공
+
+  /posts/{postId}/like:
+    post:
+      tags: [Post]
+      summary: 좋아요 토글
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PostId"
+      responses:
+        "200":
+          description: 좋아요 상태
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostLikeResponse"
+
+  /posts/{postId}/comments:
+    get:
+      tags: [Post]
+      summary: 댓글 목록 조회
+      parameters:
+        - $ref: "#/components/parameters/PostId"
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: 댓글 목록
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommentListResponse"
+    post:
+      tags: [Post]
+      summary: 댓글 작성
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PostId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentCreateRequest"
+      responses:
+        "200":
+          description: 댓글 작성 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommentCreateResponse"
+
+  /posts/{postId}/comments/{commentId}:
+    delete:
+      tags: [Post]
+      summary: 댓글 삭제
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PostId"
+        - $ref: "#/components/parameters/CommentId"
+      responses:
+        "200":
+          description: 댓글 삭제 성공
+
+  /match/recommendations:
+    get:
+      tags: [Match]
+      summary: 추천 강아지 조회
+      description: 라이프스타일 미입력 시 400을 반환한다.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: lastDogId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 추천 강아지
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MatchRecommendationResponse"
+        "400":
+          description: 라이프스타일 미입력
+
+  /adoptions:
+    post:
+      tags: [Adoption]
+      summary: 입양 신청
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdoptionCreateRequest"
+      responses:
+        "200":
+          description: 입양 신청 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdoptionCreateResponse"
+
+  /adoptions/applicants:
+    get:
+      tags: [Adoption]
+      summary: 신청자 목록 조회
+      description: 임보자용 API. contactInfo는 status가 ACCEPTED인 경우에만 포함한다.
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 신청자 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AdoptionApplicant"
+
+  /adoptions/{adoptionId}/status:
+    patch:
+      tags: [Adoption]
+      summary: 신청 수락/거절
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/AdoptionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdoptionStatusUpdateRequest"
+      responses:
+        "200":
+          description: 신청 상태 변경 성공
+
+  /adoptions/me:
+    get:
+      tags: [Adoption]
+      summary: 내 신청 내역 조회
+      description: 입양자용 API. contactInfo는 status가 ACCEPTED인 경우에만 포함한다.
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 내 신청 내역
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MyAdoption"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    DogId:
+      name: dogId
+      in: path
+      required: true
+      schema:
+        type: integer
+    PostId:
+      name: postId
+      in: path
+      required: true
+      schema:
+        type: integer
+    CommentId:
+      name: commentId
+      in: path
+      required: true
+      schema:
+        type: integer
+    AdoptionId:
+      name: adoptionId
+      in: path
+      required: true
+      schema:
+        type: integer
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+
+  schemas:
+    AuthCallbackResponse:
+      type: object
+      required: [accessToken, isNewUser]
+      properties:
+        accessToken:
+          type: string
+        isNewUser:
+          type: boolean
+
+    AccessTokenResponse:
+      type: object
+      required: [accessToken]
+      properties:
+        accessToken:
+          type: string
+
+    AuthMeResponse:
+      type: object
+      required: [userId, nickname, isProfileComplete]
+      properties:
+        userId:
+          type: integer
+        nickname:
+          type: string
+        isProfileComplete:
+          type: boolean
+
+    NicknameCheckResponse:
+      type: object
+      required: [isDuplicate]
+      properties:
+        isDuplicate:
+          type: boolean
+
+    UserOnboardingRequest:
+      type: object
+      required: [nickname, regionSido, regionSigungu]
+      properties:
+        nickname:
+          type: string
+        regionSido:
+          type: string
+        regionSigungu:
+          type: string
+
+    UserProfileResponse:
+      type: object
+      required: [userId, nickname, email, regionSido, regionSigungu, lifestyle]
+      properties:
+        userId:
+          type: integer
+        nickname:
+          type: string
+        email:
+          type: string
+          format: email
+        regionSido:
+          type: string
+        regionSigungu:
+          type: string
+        lifestyle:
+          $ref: "#/components/schemas/Lifestyle"
+
+    UserProfileUpdateRequest:
+      type: object
+      required: [nickname, regionSido, regionSigungu, lifestyle]
+      properties:
+        nickname:
+          type: string
+        regionSido:
+          type: string
+        regionSigungu:
+          type: string
+        lifestyle:
+          $ref: "#/components/schemas/Lifestyle"
+
+    Lifestyle:
+      type: object
+      required: [housingType, familyType, hasPet, dailyOutTime, preferredTraits, preferredSize]
+      properties:
+        housingType:
+          $ref: "#/components/schemas/HousingType"
+        familyType:
+          $ref: "#/components/schemas/FamilyType"
+        hasPet:
+          $ref: "#/components/schemas/HasPet"
+        dailyOutTime:
+          $ref: "#/components/schemas/DailyOutTime"
+        preferredTraits:
+          type: array
+          items:
+            $ref: "#/components/schemas/DogTrait"
+        preferredSize:
+          $ref: "#/components/schemas/PreferredDogSize"
+
+    DogCreateRequest:
+      type: object
+      required:
+        - name
+        - gender
+        - breed
+        - regionSido
+        - regionSigungu
+        - weight
+        - traits
+        - walkAmount
+        - isToiletTrained
+        - barkingLevel
+        - isSeparationAnxiety
+        - canLiveInApartment
+        - canLiveWithChild
+        - canLiveWithDog
+        - canLiveWithCat
+        - isNeutered
+        - isVaccinated
+        - hasDisease
+        - fosterNote
+        - imageUrls
+      properties:
+        name:
+          type: string
+        gender:
+          $ref: "#/components/schemas/Gender"
+        breed:
+          type: string
+        regionSido:
+          type: string
+        regionSigungu:
+          type: string
+        weight:
+          type: number
+          format: float
+        traits:
+          type: array
+          items:
+            $ref: "#/components/schemas/DogTrait"
+        walkAmount:
+          $ref: "#/components/schemas/WalkAmount"
+        isToiletTrained:
+          type: boolean
+        barkingLevel:
+          $ref: "#/components/schemas/BarkingLevel"
+        isSeparationAnxiety:
+          type: boolean
+        canLiveInApartment:
+          type: boolean
+        canLiveWithChild:
+          type: boolean
+        canLiveWithDog:
+          type: boolean
+        canLiveWithCat:
+          type: boolean
+        isNeutered:
+          type: boolean
+        isVaccinated:
+          type: boolean
+        hasDisease:
+          type: boolean
+        diseaseDescription:
+          type: string
+          nullable: true
+        fosterNote:
+          type: string
+        imageUrls:
+          type: array
+          items:
+            type: string
+            format: uri
+
+    DogCreateResponse:
+      type: object
+      required: [dogId]
+      properties:
+        dogId:
+          type: integer
+
+    MyDogSummary:
+      type: object
+      required: [dogId, name, thumbnailUrl, status, applicationCount]
+      properties:
+        dogId:
+          type: integer
+        name:
+          type: string
+        thumbnailUrl:
+          type: string
+          format: uri
+        status:
+          $ref: "#/components/schemas/DogStatus"
+        applicationCount:
+          type: integer
+
+    RecentDogSummary:
+      type: object
+      required: [dogId, name, thumbnailUrl]
+      properties:
+        dogId:
+          type: integer
+        name:
+          type: string
+        thumbnailUrl:
+          type: string
+          format: uri
+
+    DogDetail:
+      allOf:
+        - $ref: "#/components/schemas/DogBase"
+        - type: object
+          required: [dogId, size, status, applicationCount]
+          properties:
+            dogId:
+              type: integer
+            size:
+              $ref: "#/components/schemas/DogSize"
+            status:
+              $ref: "#/components/schemas/DogStatus"
+            applicationCount:
+              type: integer
+
+    DogBase:
+      type: object
+      required:
+        - name
+        - gender
+        - breed
+        - regionSido
+        - regionSigungu
+        - weight
+        - traits
+        - walkAmount
+        - isToiletTrained
+        - barkingLevel
+        - isSeparationAnxiety
+        - canLiveInApartment
+        - canLiveWithChild
+        - canLiveWithDog
+        - canLiveWithCat
+        - isNeutered
+        - isVaccinated
+        - hasDisease
+        - fosterNote
+        - imageUrls
+      properties:
+        name:
+          type: string
+        gender:
+          $ref: "#/components/schemas/Gender"
+        breed:
+          type: string
+        regionSido:
+          type: string
+        regionSigungu:
+          type: string
+        weight:
+          type: number
+          format: float
+        traits:
+          type: array
+          items:
+            $ref: "#/components/schemas/DogTrait"
+        walkAmount:
+          $ref: "#/components/schemas/WalkAmount"
+        isToiletTrained:
+          type: boolean
+        barkingLevel:
+          $ref: "#/components/schemas/BarkingLevel"
+        isSeparationAnxiety:
+          type: boolean
+        canLiveInApartment:
+          type: boolean
+        canLiveWithChild:
+          type: boolean
+        canLiveWithDog:
+          type: boolean
+        canLiveWithCat:
+          type: boolean
+        isNeutered:
+          type: boolean
+        isVaccinated:
+          type: boolean
+        hasDisease:
+          type: boolean
+        diseaseDescription:
+          type: string
+          nullable: true
+        fosterNote:
+          type: string
+        imageUrls:
+          type: array
+          items:
+            type: string
+            format: uri
+
+    DogPostListResponse:
+      type: object
+      required: [posts, nextCursor]
+      properties:
+        posts:
+          type: array
+          items:
+            $ref: "#/components/schemas/DogPostSummary"
+        nextCursor:
+          type: string
+          nullable: true
+
+    DogPostSummary:
+      type: object
+      required: [postId, thumbnailUrl, caption, likeCount, commentCount, createdAt]
+      properties:
+        postId:
+          type: integer
+        thumbnailUrl:
+          type: string
+          format: uri
+        caption:
+          type: string
+        likeCount:
+          type: integer
+        commentCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+
+    PostCreateRequest:
+      type: object
+      required: [dogId, caption, imageUrls]
+      properties:
+        dogId:
+          type: integer
+        caption:
+          type: string
+        imageUrls:
+          type: array
+          items:
+            type: string
+            format: uri
+
+    PostUpdateRequest:
+      type: object
+      required: [caption, imageUrls]
+      properties:
+        caption:
+          type: string
+        imageUrls:
+          type: array
+          items:
+            type: string
+            format: uri
+
+    PostCreateResponse:
+      type: object
+      required: [postId]
+      properties:
+        postId:
+          type: integer
+
+    PostFeedResponse:
+      type: object
+      required: [posts, nextCursor]
+      properties:
+        posts:
+          type: array
+          items:
+            $ref: "#/components/schemas/PostFeedItem"
+        nextCursor:
+          type: string
+          nullable: true
+
+    PostFeedItem:
+      type: object
+      required: [postId, author, dog, thumbnailUrl, caption, likeCount, commentCount, createdAt]
+      properties:
+        postId:
+          type: integer
+        author:
+          $ref: "#/components/schemas/Author"
+        dog:
+          $ref: "#/components/schemas/PostDogSummary"
+        thumbnailUrl:
+          type: string
+          format: uri
+        caption:
+          type: string
+        likeCount:
+          type: integer
+        commentCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+
+    PostDetail:
+      type: object
+      required: [postId, author, dog, imageUrls, caption, likeCount, isLiked, commentCount, createdAt]
+      properties:
+        postId:
+          type: integer
+        author:
+          $ref: "#/components/schemas/Author"
+        dog:
+          $ref: "#/components/schemas/PostDogDetail"
+        imageUrls:
+          type: array
+          items:
+            type: string
+            format: uri
+        caption:
+          type: string
+        likeCount:
+          type: integer
+        isLiked:
+          type: boolean
+        commentCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+
+    PostLikeResponse:
+      type: object
+      required: [isLiked, likeCount]
+      properties:
+        isLiked:
+          type: boolean
+        likeCount:
+          type: integer
+
+    CommentCreateRequest:
+      type: object
+      required: [content]
+      properties:
+        content:
+          type: string
+        parentId:
+          type: integer
+          nullable: true
+
+    CommentCreateResponse:
+      type: object
+      required: [commentId, parentId, content, createdAt]
+      properties:
+        commentId:
+          type: integer
+        parentId:
+          type: integer
+          nullable: true
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    CommentListResponse:
+      type: object
+      required: [comments, nextCursor]
+      properties:
+        comments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Comment"
+        nextCursor:
+          type: string
+          nullable: true
+
+    Comment:
+      type: object
+      required: [commentId, parentId, author, content, createdAt, replies]
+      properties:
+        commentId:
+          type: integer
+        parentId:
+          type: integer
+          nullable: true
+        author:
+          $ref: "#/components/schemas/Author"
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        replies:
+          type: array
+          items:
+            $ref: "#/components/schemas/CommentReply"
+
+    CommentReply:
+      type: object
+      required: [commentId, parentId, author, content, createdAt]
+      properties:
+        commentId:
+          type: integer
+        parentId:
+          type: integer
+        author:
+          $ref: "#/components/schemas/Author"
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    MatchRecommendationResponse:
+      allOf:
+        - $ref: "#/components/schemas/DogBase"
+        - type: object
+          required: [dogId, size, matchScore, matchReasons, cautionReasons, posts]
+          properties:
+            dogId:
+              type: integer
+            size:
+              $ref: "#/components/schemas/DogSize"
+            matchScore:
+              type: integer
+            matchReasons:
+              type: array
+              items:
+                type: string
+            cautionReasons:
+              type: array
+              items:
+                type: string
+            posts:
+              type: array
+              items:
+                $ref: "#/components/schemas/MatchPostSummary"
+
+    MatchPostSummary:
+      type: object
+      required: [postId, thumbnailUrl]
+      properties:
+        postId:
+          type: integer
+        thumbnailUrl:
+          type: string
+          format: uri
+
+    AdoptionCreateRequest:
+      type: object
+      required: [dogId, introduction]
+      properties:
+        dogId:
+          type: integer
+        introduction:
+          type: string
+
+    AdoptionCreateResponse:
+      type: object
+      required: [adoptionId]
+      properties:
+        adoptionId:
+          type: integer
+
+    AdoptionApplicant:
+      type: object
+      required: [adoptionId, dogId, applicant, matchScore, introduction, status, appliedAt]
+      properties:
+        adoptionId:
+          type: integer
+        dogId:
+          type: integer
+        applicant:
+          $ref: "#/components/schemas/Applicant"
+        matchScore:
+          type: integer
+        introduction:
+          type: string
+        status:
+          $ref: "#/components/schemas/AdoptionStatus"
+        contactInfo:
+          $ref: "#/components/schemas/ContactInfo"
+        appliedAt:
+          type: string
+          format: date-time
+
+    AdoptionStatusUpdateRequest:
+      type: object
+      required: [status]
+      properties:
+        status:
+          $ref: "#/components/schemas/AdoptionStatusUpdate"
+
+    MyAdoption:
+      type: object
+      required: [adoptionId, dog, status, appliedAt]
+      properties:
+        adoptionId:
+          type: integer
+        dog:
+          $ref: "#/components/schemas/MyAdoptionDog"
+        status:
+          $ref: "#/components/schemas/AdoptionStatus"
+        contactInfo:
+          $ref: "#/components/schemas/ContactInfo"
+        appliedAt:
+          type: string
+          format: date-time
+
+    Author:
+      type: object
+      required: [userId, nickname]
+      properties:
+        userId:
+          type: integer
+        nickname:
+          type: string
+
+    Applicant:
+      type: object
+      required: [userId, nickname, housingType, familyType, dailyOutTime]
+      properties:
+        userId:
+          type: integer
+        nickname:
+          type: string
+        housingType:
+          $ref: "#/components/schemas/HousingType"
+        familyType:
+          $ref: "#/components/schemas/FamilyType"
+        dailyOutTime:
+          $ref: "#/components/schemas/DailyOutTime"
+
+    ContactInfo:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+          format: email
+
+    PostDogSummary:
+      type: object
+      required: [dogId, name]
+      properties:
+        dogId:
+          type: integer
+        name:
+          type: string
+
+    PostDogDetail:
+      allOf:
+        - $ref: "#/components/schemas/PostDogSummary"
+        - type: object
+          required: [status]
+          properties:
+            status:
+              $ref: "#/components/schemas/DogStatus"
+
+    MyAdoptionDog:
+      type: object
+      required: [dogId, name, thumbnailUrl]
+      properties:
+        dogId:
+          type: integer
+        name:
+          type: string
+        thumbnailUrl:
+          type: string
+          format: uri
+
+    HousingType:
+      type: string
+      enum: [APARTMENT, VILLA, HOUSE]
+
+    FamilyType:
+      type: string
+      enum: [SINGLE, COUPLE, WITH_CHILD]
+
+    HasPet:
+      type: string
+      enum: [NONE, DOG, CAT]
+
+    DailyOutTime:
+      type: string
+      enum: [UNDER_4H, 4_TO_8H, OVER_8H]
+
+    PreferredDogSize:
+      type: string
+      enum: [SMALL, MEDIUM, LARGE, ANY]
+
+    DogSize:
+      type: string
+      enum: [SMALL, MEDIUM, LARGE]
+
+    Gender:
+      type: string
+      enum: [MALE, FEMALE]
+
+    DogTrait:
+      type: string
+      enum: [ACTIVE, AFFECTIONATE, CALM]
+
+    WalkAmount:
+      type: string
+      enum: [UNDER_30M, 1H, OVER_2H]
+
+    BarkingLevel:
+      type: string
+      enum: [LOW, MEDIUM, HIGH]
+
+    DogStatus:
+      type: string
+      enum: [AVAILABLE, ADOPTED]
+
+    AdoptionStatus:
+      type: string
+      enum: [PENDING, ACCEPTED, REJECTED, COMPLETE]
+
+    AdoptionStatusUpdate:
+      type: string
+      enum: [ACCEPTED, REJECTED, COMPLETE]
