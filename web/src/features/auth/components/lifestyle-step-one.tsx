@@ -3,27 +3,13 @@
 import { ArrowRight } from "lucide-react";
 
 import { LifestyleChoiceSection } from "@/features/auth/components/lifestyle-choice-section";
+import {
+  familyOptions,
+  housingOptions,
+  petOptions,
+} from "@/features/auth/constants/lifestyle-options";
 import type { FamilyType, HasPet, HousingType } from "@/features/auth/types/auth";
-import type { ChoiceOption } from "@/features/auth/types/lifestyle-onboarding-form";
 import { Button, Heading } from "@/shared/ui";
-
-const housingOptions: ChoiceOption<HousingType>[] = [
-  { value: "APARTMENT", label: "아파트" },
-  { value: "VILLA", label: "빌라" },
-  { value: "HOUSE", label: "단독주택" },
-];
-
-const familyOptions: ChoiceOption<FamilyType>[] = [
-  { value: "SINGLE", label: "1인" },
-  { value: "COUPLE", label: "부부" },
-  { value: "WITH_CHILD", label: "아이 있음" },
-];
-
-const petOptions: ChoiceOption<HasPet>[] = [
-  { value: "NONE", label: "없음" },
-  { value: "DOG", label: "개 있음" },
-  { value: "CAT", label: "고양이" },
-];
 
 type LifestyleStepOneProps = {
   housingType: HousingType;
