@@ -11,14 +11,15 @@ import {
   preferredDogSizeLabels,
   preferredTraitLabels,
 } from "@/features/auth/constants/lifestyle-options";
-import { useLogoutMutation, useMyProfileQuery } from "@/features/auth/queries";
+import { useLogoutMutation } from "@/features/auth/queries";
+import { useSession } from "@/features/auth/hooks/use-session";
 
 export function useMyPage() {
   const router = useRouter();
   const [logoutErrorMessage, setLogoutErrorMessage] = useState<string | null>(null);
-  const profileQuery = useMyProfileQuery();
+  const { user, status } = useSession();
   const logoutMutation = useLogoutMutation();
-  const profile = profileQuery.data;
+  const profile = user;
 
   const profileRows = profile
     ? [
@@ -27,7 +28,7 @@ export function useMyPage() {
       ]
     : [];
 
-  const lifestyleRows = profile
+  const lifestyleRows = profile?.lifestyle
     ? [
         { label: "주거 형태", value: housingTypeLabels[profile.lifestyle.housingType] },
         { label: "거주 지역", value: `${profile.regionSido} ${profile.regionSigungu}` },
@@ -63,8 +64,8 @@ export function useMyPage() {
   };
 
   return {
-    isLoading: profileQuery.isPending,
-    isError: profileQuery.isError,
+    isLoading: status === "loading",
+    isError: status === "unauthenticated",
     isLoggingOut: logoutMutation.isPending,
     logoutErrorMessage,
     profileRows,
