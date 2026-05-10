@@ -21,7 +21,6 @@ export function useCompleteOnboardingMutation() {
     mutationFn: authRepository.completeOnboarding,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: authQueryKeys.session() });
-      queryClient.invalidateQueries({ queryKey: authQueryKeys.profile() });
     },
   });
 }
@@ -33,7 +32,6 @@ export function useUpdateMyProfileMutation() {
     mutationFn: authRepository.updateMyProfile,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: authQueryKeys.session() });
-      queryClient.invalidateQueries({ queryKey: authQueryKeys.profile() });
     },
   });
 }
