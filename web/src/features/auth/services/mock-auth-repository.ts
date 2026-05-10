@@ -17,14 +17,33 @@ let mockProfile: UserProfile = {
   },
 };
 
+let isMockAuthenticated = false;
+
 const duplicateNicknames = new Set(["관리자", "테스트", "초코임보자"]);
 
 export function createMockAuthRepository(): AuthRepository {
   return {
     async getCurrentSession() {
+      if (!isMockAuthenticated) {
+        throw new Error("Unauthenticated");
+      }
+
       return {
         userId: mockProfile.userId,
+        email: mockProfile.email,
         nickname: mockProfile.nickname,
+        profileStatus: "COMPLETE",
+        regionSido: mockProfile.regionSido,
+        regionSigungu: mockProfile.regionSigungu,
+        lifestyle: mockProfile.lifestyle,
+      };
+    },
+
+    async refreshAccessToken() {
+      isMockAuthenticated = true;
+
+      return {
+        accessToken: "mock-access-token",
       };
     },
 
@@ -54,8 +73,12 @@ export function createMockAuthRepository(): AuthRepository {
       };
     },
 
-    async logout() {},
+    async logout() {
+      isMockAuthenticated = false;
+    },
 
-    async deleteAccount() {},
+    async deleteAccount() {
+      isMockAuthenticated = false;
+    },
   };
 }

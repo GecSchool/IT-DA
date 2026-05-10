@@ -7,6 +7,7 @@ export function useCurrentSessionQuery() {
   return useQuery({
     queryKey: authQueryKeys.session(),
     queryFn: () => authRepository.getCurrentSession(),
+    retry: false,
   });
 }
 

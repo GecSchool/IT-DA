@@ -3,6 +3,7 @@ import type { UserOnboardingPayload, UserProfileUpdatePayload } from "../types/a
 
 export interface AuthRepository {
   getCurrentSession(): Promise<SessionUser>;
+  refreshAccessToken(): Promise<{ accessToken: string }>;
   checkNickname(nickname: string): Promise<{ isDuplicate: boolean }>;
   completeOnboarding(payload: UserOnboardingPayload): Promise<void>;
   getMyProfile(): Promise<UserProfile>;

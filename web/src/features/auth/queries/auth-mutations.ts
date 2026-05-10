@@ -1,7 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { clearAccessToken, setAccessToken } from "@/shared/lib/access-token-store";
+
 import { authRepository } from "../services";
 import { authQueryKeys } from "./auth-query-keys";
+
+export function useRefreshAccessTokenMutation() {
+  return useMutation({
+    mutationFn: authRepository.refreshAccessToken,
+    onSuccess: ({ accessToken }) => {
+      setAccessToken(accessToken);
+    },
+  });
+}
 
 export function useCompleteOnboardingMutation() {
   const queryClient = useQueryClient();
@@ -32,6 +43,7 @@ export function useLogoutMutation() {
   return useMutation({
     mutationFn: authRepository.logout,
     onSuccess: () => {
+      clearAccessToken();
       queryClient.removeQueries({ queryKey: authQueryKeys.all });
     },
   });
@@ -43,6 +55,7 @@ export function useDeleteAccountMutation() {
   return useMutation({
     mutationFn: authRepository.deleteAccount,
     onSuccess: () => {
+      clearAccessToken();
       queryClient.removeQueries({ queryKey: authQueryKeys.all });
     },
   });
