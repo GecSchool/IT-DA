@@ -1,7 +1,16 @@
 import type { AuthRepository } from "./auth-repository";
-import type { UserProfile } from "../types/auth";
+import type { Lifestyle } from "../types/auth";
 
-let mockProfile: UserProfile = {
+type MockProfile = {
+  userId: number;
+  email: string;
+  nickname: string;
+  regionSido: string;
+  regionSigungu: string;
+  lifestyle: Lifestyle;
+};
+
+let mockProfile: MockProfile = {
   userId: 1,
   nickname: "초코임보자",
   email: "foster@example.com",
@@ -60,10 +69,6 @@ export function createMockAuthRepository(): AuthRepository {
         regionSido: payload.regionSido,
         regionSigungu: payload.regionSigungu,
       };
-    },
-
-    async getMyProfile() {
-      return mockProfile;
     },
 
     async updateMyProfile(payload) {

@@ -11,12 +11,6 @@ export function useCurrentSessionQuery() {
   });
 }
 
-export function useMyProfileQuery() {
-  return useQuery({
-    queryKey: authQueryKeys.profile(),
-    queryFn: () => authRepository.getMyProfile(),
-  });
-}
 
 export function useCheckNicknameQuery(nickname: string, enabled = false) {
   return useQuery({

@@ -12,7 +12,6 @@ export function useSession() {
     : sessionQuery.data
       ? "authenticated"
       : "unauthenticated";
-
   return {
     status,
     user: sessionQuery.data ?? null,
