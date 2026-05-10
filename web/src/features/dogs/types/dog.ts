@@ -1,6 +1,14 @@
 export type Gender = "MALE" | "FEMALE";
 export type DogSize = "SMALL" | "MEDIUM" | "LARGE";
-export type DogTrait = "ACTIVE" | "AFFECTIONATE" | "CALM";
+export type DogTrait =
+  | "ACTIVE"
+  | "CALM"
+  | "AFFECTIONATE"
+  | "INDEPENDENT"
+  | "SEPARATION_ANXIETY"
+  | "FRIENDLY_TO_STRANGERS"
+  | "TIMID"
+  | "PLAYFUL";
 export type WalkAmount = "UNDER_30M" | "1H" | "OVER_2H";
 export type BarkingLevel = "LOW" | "MEDIUM" | "HIGH";
 export type DogStatus = "AVAILABLE" | "ADOPTED";
