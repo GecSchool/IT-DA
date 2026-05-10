@@ -1,3 +1,6 @@
+"use client";
+
+import { useLoginPage } from "@/features/auth/hooks/use-login-page";
 import { Button, Divider, Heading, Logo, Text } from "@/shared/ui";
 
 function GoogleIcon() {
@@ -23,15 +26,9 @@ function GoogleIcon() {
   );
 }
 
-function NaverIcon() {
-  return (
-    <span className="flex size-5 items-center justify-center text-[15px] font-bold leading-none text-white">
-      N
-    </span>
-  );
-}
-
 export default function LoginPage() {
+  const { errorMessage, isCheckingSession, pendingProvider, handleSocialLogin } = useLoginPage();
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-md py-2xl">
       <section className="flex w-full max-w-[420px] -translate-y-20 flex-col items-center gap-xl">
@@ -51,16 +48,21 @@ export default function LoginPage() {
         <Divider className="w-[200px]" />
 
         <div className="flex w-full max-w-[300px] flex-col gap-3">
-          <Button variant="outline" size="lg" fullWidth leftIcon={<GoogleIcon />}>
-            구글로 시작하기
-          </Button>
+          {errorMessage ? (
+            <Text as="p" size="sm" color="danger" className="text-center">
+              {errorMessage}
+            </Text>
+          ) : null}
+
           <Button
+            variant="outline"
             size="lg"
             fullWidth
-            className="bg-[#03C75A] text-white hover:bg-[#02b350]"
-            leftIcon={<NaverIcon />}
+            leftIcon={<GoogleIcon />}
+            disabled={isCheckingSession || pendingProvider !== null}
+            onClick={() => handleSocialLogin("google")}
           >
-            네이버로 시작하기
+            구글로 시작하기
           </Button>
         </div>
       </section>
