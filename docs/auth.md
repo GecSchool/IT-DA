@@ -9,11 +9,18 @@
            → 구글 로그인 페이지
            → 구글 인증 완료
            → GET /auth/google/callback
-           ← accessToken (body) + refreshToken (httpOnly 쿠키)
-           ← isNewUser: true
+           ← refreshToken (httpOnly 쿠키) + /auth/callback 리다이렉트
+프론트 /auth/callback
+           → POST /auth/refresh
+           ← accessToken
+           → GET /auth/me
+           ← 현재 사용자 정보, profileStatus, 프로필 기본 정보
 ```
 
-`isNewUser: true`면 프론트에서 온보딩 화면으로 이동, `false`면 메인으로 이동.
+프론트는 `/auth/me`의 `profileStatus`로 이동할 화면을 결정한다.
+
+- `INCOMPLETE` → `/profile-setup`
+- `COMPLETE` → `/`
 
 ---
 
@@ -44,6 +51,8 @@
 
 accessToken 만료 시 프론트에서 `POST /auth/refresh` 호출. 브라우저가 httpOnly 쿠키에 담긴 refreshToken을 자동으로 전송. 백엔드에서 쿠키 꺼내 DB 값과 대조 후 새 accessToken 반환.
 
+OAuth callback 직후 프론트 `/auth/callback` 페이지에서도 같은 방식으로 `POST /auth/refresh`를 호출해 accessToken을 발급받는다.
+
 ---
 
 **6. 로그아웃**
@@ -54,6 +63,6 @@ accessToken 만료 시 프론트에서 `POST /auth/refresh` 호출. 브라우저
 
 **7. 세션 유효성 확인**
 
-페이지 진입 또는 앱 초기 로딩 시 `GET /auth/me` 호출해서 토큰 유효한지 확인. 만료됐으면 자동으로 refresh 시도, refresh도 실패하면 로그인 화면으로 이동.
+페이지 진입 또는 앱 초기 로딩 시 `GET /auth/me` 호출해서 토큰 유효성과 프로필 상태를 확인한다. accessToken이 만료됐으면 프론트에서 `POST /auth/refresh`를 먼저 시도하고, refresh도 실패하면 로그인 화면으로 이동한다.
 
 ## 결국 유효한 Refresh Token에 유무가 로그인 상태를 의미함

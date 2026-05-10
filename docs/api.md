@@ -23,16 +23,10 @@
 
 `GET /auth/google/callback` — 콜백 처리
 
-- Response:
-
-```json
-{
-    "accessToken": "string",
-    "isNewUser": true
-}
-```
-
-> refreshToken은 httpOnly 쿠키로 Set-Cookie 헤더에 담아서 응답
+- Response: refreshToken을 httpOnly 쿠키로 저장한 뒤 프론트 `/auth/callback`으로 리다이렉트
+- Header:
+    - `Set-Cookie: refreshToken=...; HttpOnly`
+    - `Location: {FRONTEND_URL}/auth/callback`
 
 `POST /auth/refresh` — 토큰 재발급
 
@@ -45,16 +39,30 @@
 }
 ```
 
-`GET /auth/me` 🔒 — 세션 유효성 확인
+`GET /auth/me` 🔒 — 현재 사용자 및 프로필 상태 조회
 
 - Response:
 
 ```json
 {
     "userId": 1,
-    "nickname": "string"
+    "email": "string",
+    "nickname": "string",
+    "profileStatus": "INCOMPLETE | COMPLETE",
+    "regionSido": "string | null",
+    "regionSigungu": "string | null",
+    "lifestyle": {
+        "housingType": "APARTMENT | VILLA | HOUSE",
+        "familyType": "SINGLE | COUPLE | WITH_CHILD",
+        "hasPet": "NONE | DOG | CAT",
+        "dailyOutTime": "UNDER_4H | 4_TO_8H | OVER_8H",
+        "preferredTraits": ["ACTIVE", "CALM"],
+        "preferredSize": "SMALL | MEDIUM | LARGE | ANY"
+    }
 }
 ```
+
+> `profileStatus`가 `INCOMPLETE`이면 `regionSido`, `regionSigungu`, `lifestyle`은 `null`일 수 있다.
 
 `POST /auth/logout` 🔒 — 로그아웃
 
@@ -91,28 +99,6 @@
 ```
 
 - Response: 200 OK
-
-`GET /users/me` 🔒 — 내 프로필 조회
-
-- Response:
-
-```json
-{
-    "userId": 1,
-    "nickname": "string",
-    "email": "string",
-    "regionSido": "string",
-    "regionSigungu": "string",
-    "lifestyle": {
-        "housingType": "APARTMENT | VILLA | HOUSE",
-        "familyType": "SINGLE | COUPLE | WITH_CHILD",
-        "hasPet": "NONE | DOG | CAT",
-        "dailyOutTime": "UNDER_4H | 4_TO_8H | OVER_8H",
-        "preferredTraits": ["ACTIVE", "CALM"],
-        "preferredSize": "SMALL | MEDIUM | LARGE | ANY"
-    }
-}
-```
 
 `PUT /users/me` 🔒 — 라이프스타일 등록/수정
 

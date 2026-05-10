@@ -30,17 +30,18 @@ paths:
       tags: [Auth]
       summary: 구글 OAuth 콜백 처리
       responses:
-        "200":
-          description: 로그인 성공
+        "302":
+          description: refreshToken 쿠키 저장 후 프론트 /auth/callback으로 리다이렉트
           headers:
             Set-Cookie:
               description: httpOnly refreshToken 쿠키
               schema:
                 type: string
-          content:
-            application/json:
+            Location:
+              description: 프론트 OAuth 후처리 페이지 URL
               schema:
-                $ref: "#/components/schemas/AuthCallbackResponse"
+                type: string
+                example: https://frontend.example.com/auth/callback
 
   /auth/refresh:
     post:
@@ -124,18 +125,6 @@ paths:
           description: 초기 정보 등록 성공
 
   /users/me:
-    get:
-      tags: [User]
-      summary: 내 프로필 조회
-      security:
-        - bearerAuth: []
-      responses:
-        "200":
-          description: 내 프로필
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UserProfileResponse"
     put:
       tags: [User]
       summary: 라이프스타일 등록/수정
@@ -558,15 +547,6 @@ components:
         minimum: 1
 
   schemas:
-    AuthCallbackResponse:
-      type: object
-      required: [accessToken, isNewUser]
-      properties:
-        accessToken:
-          type: string
-        isNewUser:
-          type: boolean
-
     AccessTokenResponse:
       type: object
       required: [accessToken]
@@ -576,12 +556,28 @@ components:
 
     AuthMeResponse:
       type: object
-      required: [userId, nickname]
+      required: [userId, email, nickname, profileStatus, regionSido, regionSigungu, lifestyle]
       properties:
         userId:
           type: integer
+        email:
+          type: string
+          format: email
         nickname:
           type: string
+        profileStatus:
+          type: string
+          enum: [INCOMPLETE, COMPLETE]
+        regionSido:
+          type: string
+          nullable: true
+        regionSigungu:
+          type: string
+          nullable: true
+        lifestyle:
+          allOf:
+            - $ref: "#/components/schemas/Lifestyle"
+          nullable: true
 
     NicknameCheckResponse:
       type: object
@@ -600,24 +596,6 @@ components:
           type: string
         regionSigungu:
           type: string
-
-    UserProfileResponse:
-      type: object
-      required: [userId, nickname, email, regionSido, regionSigungu, lifestyle]
-      properties:
-        userId:
-          type: integer
-        nickname:
-          type: string
-        email:
-          type: string
-          format: email
-        regionSido:
-          type: string
-        regionSigungu:
-          type: string
-        lifestyle:
-          $ref: "#/components/schemas/Lifestyle"
 
     UserProfileUpdateRequest:
       type: object
