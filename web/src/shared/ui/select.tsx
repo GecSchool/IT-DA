@@ -43,7 +43,7 @@ export function Select({
   const invalid = Boolean(error);
 
   return (
-    <div className="flex w-full flex-col gap-1.5">
+    <div className="relative flex w-full flex-col gap-1.5">
       {label ? (
         <Text as="label" htmlFor={id} size="sm" weight="medium">
           {label}
@@ -87,7 +87,7 @@ export function Select({
         </SelectPrimitive.Portal>
       </SelectPrimitive.Root>
       {error ? (
-        <Text size="sm" color="danger">
+        <Text size="sm" color="danger" className="absolute left-0 top-full mt-1.5 whitespace-nowrap">
           {error}
         </Text>
       ) : null}
