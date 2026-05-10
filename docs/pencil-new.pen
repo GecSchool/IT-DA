@@ -7015,7 +7015,7 @@
                           "id": "GjA8h",
                           "name": "replyView",
                           "width": "fill_container",
-                          "height": 141.33830883699233,
+                          "height": 219.28592683878435,
                           "gap": 4,
                           "padding": [
                             0,
@@ -7092,7 +7092,7 @@
                             "wZ1pp": {
                               "width": "fit_content",
                               "height": "fit_content",
-                              "y": -4.648810599492215
+                              "y": -4.648810599492208
                             },
                             "mqlUA": {
                               "x": 23
@@ -7101,7 +7101,7 @@
                               "width": "fit_content",
                               "height": "fit_content",
                               "x": 54,
-                              "y": -5.148810599492215
+                              "y": -5.148810599492208
                             },
                             "BLxXK": {
                               "x": 23
@@ -8285,475 +8285,6 @@
               ]
             }
           ]
-        },
-        {
-          "type": "frame",
-          "id": "UV7Op",
-          "x": 72,
-          "y": 1855,
-          "name": "Page/Lifestyle-1",
-          "clip": true,
-          "width": 1440,
-          "height": 1000,
-          "fill": "$--background",
-          "layout": "none",
-          "children": [
-            {
-              "type": "frame",
-              "id": "k1EnT",
-              "x": 440,
-              "y": 81,
-              "name": "content",
-              "width": 560,
-              "height": 517,
-              "layout": "vertical",
-              "gap": 28,
-              "children": [
-                {
-                  "id": "IbtiW",
-                  "type": "ref",
-                  "ref": "Wl2FS",
-                  "height": "fit_content",
-                  "width": "fill_container",
-                  "name": "uv7Prog",
-                  "x": 0,
-                  "y": 0,
-                  "descendants": {
-                    "GM38E": {
-                      "width": "fill_container",
-                      "height": "fit_content",
-                      "y": 5.5
-                    },
-                    "mvxT7": {
-                      "width": 261
-                    },
-                    "0B5NW": {
-                      "width": "fill_container",
-                      "x": 264
-                    },
-                    "bG8rJ": {
-                      "content": "1 / 2",
-                      "x": 534
-                    }
-                  }
-                },
-                {
-                  "type": "text",
-                  "id": "k8Pn8",
-                  "name": "title",
-                  "fill": "$--foreground",
-                  "content": "나의 환경을 알려주세요",
-                  "fontFamily": "Inter",
-                  "fontSize": "$--font-size-2xl",
-                  "fontWeight": "700"
-                },
-                {
-                  "type": "frame",
-                  "id": "SaVNn",
-                  "name": "sec_housing",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "KJROT",
-                      "name": "sec1Lbl",
-                      "fill": "$--foreground",
-                      "content": "주거 형태",
-                      "fontFamily": "Inter",
-                      "fontSize": 14,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "BVKYU",
-                      "name": "sec1Chips",
-                      "width": "fill_container",
-                      "gap": 8,
-                      "children": [
-                        {
-                          "id": "o10KQ",
-                          "type": "ref",
-                          "ref": "S8XD5",
-                          "name": "c1a",
-                          "x": 0,
-                          "width": "fit_content",
-                          "height": "fit_content",
-                          "descendants": {
-                            "6LwYv": {
-                              "content": "아파트",
-                              "x": 14,
-                              "y": 7
-                            }
-                          }
-                        },
-                        {
-                          "id": "ODboQ",
-                          "type": "ref",
-                          "ref": "NGPHc",
-                          "name": "c1b",
-                          "width": "fit_content",
-                          "x": 72,
-                          "height": "fit_content",
-                          "descendants": {
-                            "xI4gt": {
-                              "content": "빌라",
-                              "x": 14,
-                              "y": 7
-                            }
-                          }
-                        },
-                        {
-                          "id": "NNdYh",
-                          "type": "ref",
-                          "ref": "NGPHc",
-                          "name": "c1c",
-                          "width": "fit_content",
-                          "x": 132,
-                          "height": "fit_content",
-                          "descendants": {
-                            "xI4gt": {
-                              "content": "단독주택",
-                              "x": 14,
-                              "y": 7
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "tEXtM",
-                  "name": "sec_region",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "8OgbW",
-                      "name": "sec2Lbl",
-                      "fill": "$--foreground",
-                      "content": "거주 지역",
-                      "fontFamily": "Inter",
-                      "fontSize": 14,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "m1lEo",
-                      "name": "sec2Row",
-                      "width": "fill_container",
-                      "gap": 8,
-                      "children": [
-                        {
-                          "id": "xldDg",
-                          "type": "ref",
-                          "ref": "vHcuz",
-                          "width": "fill_container",
-                          "name": "r1",
-                          "height": "fit_content",
-                          "x": 0,
-                          "descendants": {
-                            "0fFDu": {
-                              "enabled": false
-                            },
-                            "mwSe8": {
-                              "width": "fill_container",
-                              "y": 0,
-                              "height": "fit_content"
-                            },
-                            "mwSe8/rhjQG": {
-                              "x": 14,
-                              "y": 10
-                            },
-                            "mwSe8/TwWX7": {
-                              "x": 246,
-                              "y": 12
-                            }
-                          }
-                        },
-                        {
-                          "id": "lmsMK",
-                          "type": "ref",
-                          "ref": "vHcuz",
-                          "width": "fill_container",
-                          "name": "r2",
-                          "height": "fit_content",
-                          "x": 284,
-                          "descendants": {
-                            "0fFDu": {
-                              "enabled": false
-                            },
-                            "mwSe8": {
-                              "width": "fill_container",
-                              "y": 0,
-                              "height": "fit_content"
-                            },
-                            "mwSe8/rhjQG": {
-                              "x": 14,
-                              "y": 10
-                            },
-                            "mwSe8/TwWX7": {
-                              "x": 246,
-                              "y": 12
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "ENUhw",
-                  "name": "sec_family",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "r1vN1",
-                      "name": "sec3Lbl",
-                      "fill": "$--foreground",
-                      "content": "가족 구성",
-                      "fontFamily": "Inter",
-                      "fontSize": 14,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "4vK92",
-                      "name": "sec3Chips",
-                      "width": "fill_container",
-                      "gap": 8,
-                      "children": [
-                        {
-                          "id": "k3EjE",
-                          "type": "ref",
-                          "ref": "S8XD5",
-                          "name": "c3a",
-                          "width": "fit_content",
-                          "x": 0,
-                          "height": "fit_content",
-                          "descendants": {
-                            "6LwYv": {
-                              "content": "1인",
-                              "x": 14,
-                              "y": 7
-                            }
-                          }
-                        },
-                        {
-                          "id": "EpIvF",
-                          "type": "ref",
-                          "ref": "NGPHc",
-                          "name": "c3b",
-                          "width": "fit_content",
-                          "x": 54,
-                          "height": "fit_content",
-                          "descendants": {
-                            "xI4gt": {
-                              "content": "부부",
-                              "x": 14,
-                              "y": 7
-                            }
-                          }
-                        },
-                        {
-                          "id": "fQpuW",
-                          "type": "ref",
-                          "ref": "NGPHc",
-                          "name": "c3c",
-                          "width": "fit_content",
-                          "x": 114,
-                          "height": "fit_content",
-                          "descendants": {
-                            "xI4gt": {
-                              "content": "아이 있음",
-                              "x": 14,
-                              "y": 7
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "WCopz",
-                  "name": "sec_pet",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "tqEip",
-                      "name": "sec4Lbl",
-                      "fill": "$--foreground",
-                      "content": "다른 반려동물",
-                      "fontFamily": "Inter",
-                      "fontSize": 14,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "NBfop",
-                      "name": "sec4Chips",
-                      "width": "fill_container",
-                      "gap": 8,
-                      "children": [
-                        {
-                          "id": "TJ4rD",
-                          "type": "ref",
-                          "ref": "S8XD5",
-                          "name": "c4a",
-                          "width": "fit_content",
-                          "x": 0,
-                          "height": "fit_content",
-                          "descendants": {
-                            "6LwYv": {
-                              "content": "없음",
-                              "x": 14,
-                              "y": 7
-                            }
-                          }
-                        },
-                        {
-                          "id": "dIWi6",
-                          "type": "ref",
-                          "ref": "NGPHc",
-                          "name": "c4b",
-                          "width": "fit_content",
-                          "x": 60,
-                          "height": "fit_content",
-                          "descendants": {
-                            "xI4gt": {
-                              "content": "개 있음",
-                              "x": 14,
-                              "y": 7
-                            }
-                          }
-                        },
-                        {
-                          "id": "dC32z",
-                          "type": "ref",
-                          "ref": "NGPHc",
-                          "name": "c4c",
-                          "x": 136,
-                          "width": "fit_content",
-                          "height": "fit_content",
-                          "descendants": {
-                            "xI4gt": {
-                              "content": "고양이",
-                              "x": 14,
-                              "y": 7
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "pKRMA",
-                  "name": "btnRow",
-                  "width": "fill_container",
-                  "justifyContent": "end",
-                  "children": [
-                    {
-                      "id": "onzhV",
-                      "type": "ref",
-                      "ref": "0qhVA",
-                      "name": "nextBtn",
-                      "width": "fit_content",
-                      "x": 477,
-                      "height": "fit_content",
-                      "descendants": {
-                        "QiIyC": {
-                          "content": "다음 →",
-                          "x": 20,
-                          "y": 10
-                        }
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "id": "bmitL",
-              "type": "ref",
-              "ref": "9GTw2",
-              "x": 0,
-              "y": 48,
-              "descendants": {
-                "Xq2Ka": {
-                  "x": 4
-                },
-                "3d3ph": {
-                  "x": 18,
-                  "y": 18
-                },
-                "5DSQ2": {
-                  "height": "fit_content",
-                  "y": 298
-                },
-                "krnJD": {
-                  "height": "fit_content"
-                },
-                "krnJD/27SrG": {
-                  "x": 15,
-                  "y": 10
-                },
-                "9qZcN": {
-                  "height": "fit_content"
-                },
-                "9qZcN/kU3Ip": {
-                  "x": 15,
-                  "y": 10
-                },
-                "2UCka": {
-                  "height": "fit_content"
-                },
-                "2UCka/kU3Ip": {
-                  "x": 15,
-                  "y": 10
-                },
-                "h9aiO": {
-                  "height": "fit_content"
-                },
-                "h9aiO/kU3Ip": {
-                  "x": 15,
-                  "y": 10
-                },
-                "BFV8s": {
-                  "height": "fit_content"
-                },
-                "BFV8s/kU3Ip": {
-                  "x": 15,
-                  "y": 10
-                },
-                "Y3XCL": {
-                  "height": "fit_content"
-                },
-                "UW0fN": {
-                  "y": 856
-                },
-                "uzfgt": {
-                  "x": 27,
-                  "y": 13
-                }
-              }
-            }
-          ]
         }
       ]
     },
@@ -9581,12 +9112,12 @@
               "y": 190.91491233158382
             },
             "vLZfe": {
-              "x": -0.02078514641001572,
-              "y": 341.8704485190272
+              "x": -0.028851798582773647,
+              "y": 337.9975099326789
             },
             "3A2qF": {
-              "x": -7.987288167083295,
-              "y": 5.796763638170548
+              "x": -7.981678469328325,
+              "y": 4.647059786363748
             },
             "YBA3I": {
               "width": "fit_content",
@@ -9597,19 +9128,19 @@
             "YBA3I/wZ1pp": {
               "width": "fit_content",
               "height": "fit_content",
-              "y": 5.732686359344951
+              "y": 8.463233007386101
             },
             "YBA3I/jHxCc": {
               "width": "fit_content",
               "height": "fit_content",
               "x": 54,
-              "y": 5.232686359344951
+              "y": 7.963233007386101
             },
             "nnfhe": {
-              "width": 360.00486604162904,
+              "width": 359.9999999999999,
               "height": "fit_content",
-              "x": 8.059356196952535,
-              "y": 41.4653727186899
+              "x": 8.070325444593703,
+              "y": 46.9264660147722
             },
             "uu9aw": {
               "width": "fill_container",
@@ -9619,18 +9150,18 @@
             "ANpcU": {
               "width": "fill_container",
               "height": "fit_content",
-              "x": 0.029605489467996904,
-              "y": 120.0005888779003
+              "x": 0.03509011426999109,
+              "y": 131.46153533138926
             },
             "dvXxo": {
               "width": "fill_container",
-              "y": 0.19337973908526584
+              "y": 0.2671818139732255
             },
             "HYLJp": {
               "width": "fill_container",
               "height": "fit_content",
-              "x": 0.029605489467996904,
-              "y": 121.38734835607083
+              "x": 0.03509011426999109,
+              "y": 132.9958989593357
             },
             "InIr7": {
               "width": "fill_container",
@@ -9645,7 +9176,7 @@
             "1u6iR": {
               "width": "fit_content",
               "height": "fit_content",
-              "x": 278.0048660416291
+              "x": 277.99999999999994
             }
           }
         }
@@ -12231,10 +11762,10 @@
                       "id": "Wbe97",
                       "type": "ref",
                       "ref": "NTsuw",
-                      "width": 250,
+                      "width": 227.27272727272725,
                       "height": 250,
                       "name": "hPhoto",
-                      "x": -0.3299259173771816,
+                      "x": -1.0909090909090793,
                       "y": 0,
                       "flipX": false,
                       "flipY": false,
@@ -12242,11 +11773,11 @@
                       "clip": true,
                       "descendants": {
                         "ZWLmP": {
-                          "x": 113,
+                          "x": 101.63636363636363,
                           "y": 103.5
                         },
                         "eDMqF": {
-                          "x": 115.5,
+                          "x": 104.13636363636363,
                           "y": 133.5
                         }
                       }
@@ -16029,7 +15560,7 @@
                       "id": "EFC2B",
                       "type": "ref",
                       "ref": "NTsuw",
-                      "width": 243.0103325547232,
+                      "width": 437.0585393532139,
                       "height": 250,
                       "name": "hPhoto",
                       "x": 0,
@@ -16040,11 +15571,11 @@
                       "clip": true,
                       "descendants": {
                         "ZWLmP": {
-                          "x": 109.5051662773616,
+                          "x": 206.52926967660696,
                           "y": 103.5
                         },
                         "eDMqF": {
-                          "x": 112.0051662773616,
+                          "x": 209.02926967660696,
                           "y": 133.5
                         }
                       }
@@ -16053,7 +15584,7 @@
                       "type": "frame",
                       "id": "Xa9zY",
                       "name": "infoCol",
-                      "width": 334.38221759529904,
+                      "width": 601.3925501500222,
                       "fill": "#00000000",
                       "layout": "vertical",
                       "gap": 8,
@@ -16896,10 +16427,10 @@
                       "id": "CZ904",
                       "type": "ref",
                       "ref": "NTsuw",
-                      "width": 239.61661341853036,
+                      "width": 426.2146864800734,
                       "height": 250,
                       "name": "hPhoto",
-                      "x": -0.4984025559101042,
+                      "x": -5.684341886080802e-14,
                       "y": 0,
                       "flipX": false,
                       "flipY": false,
@@ -16907,11 +16438,11 @@
                       "clip": true,
                       "descendants": {
                         "ZWLmP": {
-                          "x": 107.80830670926517,
+                          "x": 201.1073432400367,
                           "y": 103.5
                         },
                         "eDMqF": {
-                          "x": 110.30830670926517,
+                          "x": 203.6073432400367,
                           "y": 133.5
                         }
                       }
@@ -16920,7 +16451,7 @@
                       "type": "frame",
                       "id": "TQX0C",
                       "name": "infoCol",
-                      "width": 337.3801916932907,
+                      "width": 600.1102785639433,
                       "fill": "#00000000",
                       "layout": "vertical",
                       "gap": 8,
@@ -17517,6 +17048,475 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "UV7Op",
+      "x": 6654,
+      "y": -1266,
+      "name": "Page/Lifestyle-1",
+      "clip": true,
+      "width": 1440,
+      "height": 1000,
+      "fill": "$--background",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "k1EnT",
+          "x": 440,
+          "y": 81,
+          "name": "content",
+          "width": 560,
+          "height": 517,
+          "layout": "vertical",
+          "gap": 28,
+          "children": [
+            {
+              "id": "IbtiW",
+              "type": "ref",
+              "ref": "Wl2FS",
+              "height": "fit_content",
+              "width": "fill_container",
+              "name": "uv7Prog",
+              "x": 0,
+              "y": 0,
+              "descendants": {
+                "GM38E": {
+                  "width": "fill_container",
+                  "height": "fit_content",
+                  "y": 5.5
+                },
+                "mvxT7": {
+                  "width": 261
+                },
+                "0B5NW": {
+                  "width": "fill_container",
+                  "x": 264
+                },
+                "bG8rJ": {
+                  "content": "1 / 2",
+                  "x": 534
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "k8Pn8",
+              "name": "title",
+              "fill": "$--foreground",
+              "content": "나의 환경을 알려주세요",
+              "fontFamily": "Inter",
+              "fontSize": "$--font-size-2xl",
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "SaVNn",
+              "name": "sec_housing",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "KJROT",
+                  "name": "sec1Lbl",
+                  "fill": "$--foreground",
+                  "content": "주거 형태",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "BVKYU",
+                  "name": "sec1Chips",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "id": "o10KQ",
+                      "type": "ref",
+                      "ref": "S8XD5",
+                      "name": "c1a",
+                      "x": 0,
+                      "width": "fit_content",
+                      "height": "fit_content",
+                      "descendants": {
+                        "6LwYv": {
+                          "content": "아파트",
+                          "x": 14,
+                          "y": 7
+                        }
+                      }
+                    },
+                    {
+                      "id": "ODboQ",
+                      "type": "ref",
+                      "ref": "NGPHc",
+                      "name": "c1b",
+                      "width": "fit_content",
+                      "x": 72,
+                      "height": "fit_content",
+                      "descendants": {
+                        "xI4gt": {
+                          "content": "빌라",
+                          "x": 14,
+                          "y": 7
+                        }
+                      }
+                    },
+                    {
+                      "id": "NNdYh",
+                      "type": "ref",
+                      "ref": "NGPHc",
+                      "name": "c1c",
+                      "width": "fit_content",
+                      "x": 132,
+                      "height": "fit_content",
+                      "descendants": {
+                        "xI4gt": {
+                          "content": "단독주택",
+                          "x": 14,
+                          "y": 7
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tEXtM",
+              "name": "sec_region",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "8OgbW",
+                  "name": "sec2Lbl",
+                  "fill": "$--foreground",
+                  "content": "거주 지역",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "m1lEo",
+                  "name": "sec2Row",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "id": "xldDg",
+                      "type": "ref",
+                      "ref": "vHcuz",
+                      "width": "fill_container",
+                      "name": "r1",
+                      "height": "fit_content",
+                      "x": 0,
+                      "descendants": {
+                        "0fFDu": {
+                          "enabled": false
+                        },
+                        "mwSe8": {
+                          "width": "fill_container",
+                          "y": 0,
+                          "height": "fit_content"
+                        },
+                        "mwSe8/rhjQG": {
+                          "x": 14,
+                          "y": 10
+                        },
+                        "mwSe8/TwWX7": {
+                          "x": 246,
+                          "y": 12
+                        }
+                      }
+                    },
+                    {
+                      "id": "lmsMK",
+                      "type": "ref",
+                      "ref": "vHcuz",
+                      "width": "fill_container",
+                      "name": "r2",
+                      "height": "fit_content",
+                      "x": 284,
+                      "descendants": {
+                        "0fFDu": {
+                          "enabled": false
+                        },
+                        "mwSe8": {
+                          "width": "fill_container",
+                          "y": 0,
+                          "height": "fit_content"
+                        },
+                        "mwSe8/rhjQG": {
+                          "x": 14,
+                          "y": 10
+                        },
+                        "mwSe8/TwWX7": {
+                          "x": 246,
+                          "y": 12
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ENUhw",
+              "name": "sec_family",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "r1vN1",
+                  "name": "sec3Lbl",
+                  "fill": "$--foreground",
+                  "content": "가족 구성",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "4vK92",
+                  "name": "sec3Chips",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "id": "k3EjE",
+                      "type": "ref",
+                      "ref": "S8XD5",
+                      "name": "c3a",
+                      "width": "fit_content",
+                      "x": 0,
+                      "height": "fit_content",
+                      "descendants": {
+                        "6LwYv": {
+                          "content": "1인",
+                          "x": 14,
+                          "y": 7
+                        }
+                      }
+                    },
+                    {
+                      "id": "EpIvF",
+                      "type": "ref",
+                      "ref": "NGPHc",
+                      "name": "c3b",
+                      "width": "fit_content",
+                      "x": 54,
+                      "height": "fit_content",
+                      "descendants": {
+                        "xI4gt": {
+                          "content": "부부",
+                          "x": 14,
+                          "y": 7
+                        }
+                      }
+                    },
+                    {
+                      "id": "fQpuW",
+                      "type": "ref",
+                      "ref": "NGPHc",
+                      "name": "c3c",
+                      "width": "fit_content",
+                      "x": 114,
+                      "height": "fit_content",
+                      "descendants": {
+                        "xI4gt": {
+                          "content": "아이 있음",
+                          "x": 14,
+                          "y": 7
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "WCopz",
+              "name": "sec_pet",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "tqEip",
+                  "name": "sec4Lbl",
+                  "fill": "$--foreground",
+                  "content": "다른 반려동물",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "NBfop",
+                  "name": "sec4Chips",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "id": "TJ4rD",
+                      "type": "ref",
+                      "ref": "S8XD5",
+                      "name": "c4a",
+                      "width": "fit_content",
+                      "x": 0,
+                      "height": "fit_content",
+                      "descendants": {
+                        "6LwYv": {
+                          "content": "없음",
+                          "x": 14,
+                          "y": 7
+                        }
+                      }
+                    },
+                    {
+                      "id": "dIWi6",
+                      "type": "ref",
+                      "ref": "NGPHc",
+                      "name": "c4b",
+                      "width": "fit_content",
+                      "x": 60,
+                      "height": "fit_content",
+                      "descendants": {
+                        "xI4gt": {
+                          "content": "개 있음",
+                          "x": 14,
+                          "y": 7
+                        }
+                      }
+                    },
+                    {
+                      "id": "dC32z",
+                      "type": "ref",
+                      "ref": "NGPHc",
+                      "name": "c4c",
+                      "x": 136,
+                      "width": "fit_content",
+                      "height": "fit_content",
+                      "descendants": {
+                        "xI4gt": {
+                          "content": "고양이",
+                          "x": 14,
+                          "y": 7
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "pKRMA",
+              "name": "btnRow",
+              "width": "fill_container",
+              "justifyContent": "end",
+              "children": [
+                {
+                  "id": "onzhV",
+                  "type": "ref",
+                  "ref": "0qhVA",
+                  "name": "nextBtn",
+                  "width": "fit_content",
+                  "x": 477,
+                  "height": "fit_content",
+                  "descendants": {
+                    "QiIyC": {
+                      "content": "다음 →",
+                      "x": 20,
+                      "y": 10
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "bmitL",
+          "type": "ref",
+          "ref": "9GTw2",
+          "x": 0,
+          "y": 48,
+          "descendants": {
+            "Xq2Ka": {
+              "x": 4
+            },
+            "3d3ph": {
+              "x": 18,
+              "y": 18
+            },
+            "5DSQ2": {
+              "height": "fit_content",
+              "y": 298
+            },
+            "krnJD": {
+              "height": "fit_content"
+            },
+            "krnJD/27SrG": {
+              "x": 15,
+              "y": 10
+            },
+            "9qZcN": {
+              "height": "fit_content"
+            },
+            "9qZcN/kU3Ip": {
+              "x": 15,
+              "y": 10
+            },
+            "2UCka": {
+              "height": "fit_content"
+            },
+            "2UCka/kU3Ip": {
+              "x": 15,
+              "y": 10
+            },
+            "h9aiO": {
+              "height": "fit_content"
+            },
+            "h9aiO/kU3Ip": {
+              "x": 15,
+              "y": 10
+            },
+            "BFV8s": {
+              "height": "fit_content"
+            },
+            "BFV8s/kU3Ip": {
+              "x": 15,
+              "y": 10
+            },
+            "Y3XCL": {
+              "height": "fit_content"
+            },
+            "UW0fN": {
+              "y": 856
+            },
+            "uzfgt": {
+              "x": 27,
+              "y": 13
+            }
+          }
         }
       ]
     }
