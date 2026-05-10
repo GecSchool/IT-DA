@@ -3,36 +3,17 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { LifestyleChoiceSection } from "@/features/auth/components/lifestyle-choice-section";
+import {
+  dailyOutTimeOptions,
+  preferredSizeOptions,
+  preferredTraitOptions,
+} from "@/features/auth/constants/lifestyle-options";
 import type {
   DailyOutTime,
   PreferredDogSize,
   PreferredTrait,
 } from "@/features/auth/types/auth";
-import type { ChoiceOption } from "@/features/auth/types/lifestyle-onboarding-form";
 import { Button, Heading, Text } from "@/shared/ui";
-
-const dailyOutTimeOptions: ChoiceOption<DailyOutTime>[] = [
-  { value: "UNDER_4H", label: "4시간 이하" },
-  { value: "4_TO_8H", label: "4~8시간" },
-  { value: "OVER_8H", label: "8시간 이상" },
-];
-
-const preferredTraitOptions: ChoiceOption<PreferredTrait>[] = [
-  { value: "ACTIVE", label: "활발함" },
-  { value: "AFFECTIONATE", label: "애교많음" },
-  { value: "CALM", label: "얌전함" },
-  { value: "INDEPENDENT", label: "독립적" },
-  { value: "FRIENDLY_TO_STRANGERS", label: "낯선사람 친화적" },
-  { value: "PLAYFUL", label: "장난기많음" },
-  { value: "TIMID", label: "겁쟁이" },
-];
-
-const preferredSizeOptions: ChoiceOption<PreferredDogSize>[] = [
-  { value: "SMALL", label: "소형" },
-  { value: "MEDIUM", label: "중형" },
-  { value: "LARGE", label: "대형" },
-  { value: "ANY", label: "상관없음" },
-];
 
 type LifestyleStepTwoProps = {
   dailyOutTime: DailyOutTime;
