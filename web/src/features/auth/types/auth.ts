@@ -4,11 +4,7 @@ export type HasPet = "NONE" | "DOG" | "CAT";
 export type DailyOutTime = "UNDER_4H" | "4_TO_8H" | "OVER_8H";
 export type PreferredDogSize = "SMALL" | "MEDIUM" | "LARGE" | "ANY";
 export type PreferredTrait = "ACTIVE" | "AFFECTIONATE" | "CALM";
-
-export type SessionUser = {
-  userId: number;
-  nickname: string;
-};
+export type ProfileStatus = "INCOMPLETE" | "COMPLETE";
 
 export type Lifestyle = {
   housingType: HousingType;
@@ -17,6 +13,16 @@ export type Lifestyle = {
   dailyOutTime: DailyOutTime;
   preferredTraits: PreferredTrait[];
   preferredSize: PreferredDogSize;
+};
+
+export type SessionUser = {
+  userId: number;
+  email: string;
+  nickname: string;
+  profileStatus: ProfileStatus;
+  regionSido: string | null;
+  regionSigungu: string | null;
+  lifestyle: Lifestyle | null;
 };
 
 export type UserProfile = {

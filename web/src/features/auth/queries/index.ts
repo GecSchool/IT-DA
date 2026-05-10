@@ -8,5 +8,6 @@ export {
   useCompleteOnboardingMutation,
   useDeleteAccountMutation,
   useLogoutMutation,
+  useRefreshAccessTokenMutation,
   useUpdateMyProfileMutation,
 } from "./auth-mutations";
