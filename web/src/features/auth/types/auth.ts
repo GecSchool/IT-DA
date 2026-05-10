@@ -3,7 +3,14 @@ export type FamilyType = "SINGLE" | "COUPLE" | "WITH_CHILD";
 export type HasPet = "NONE" | "DOG" | "CAT";
 export type DailyOutTime = "UNDER_4H" | "4_TO_8H" | "OVER_8H";
 export type PreferredDogSize = "SMALL" | "MEDIUM" | "LARGE" | "ANY";
-export type PreferredTrait = "ACTIVE" | "AFFECTIONATE" | "CALM";
+export type PreferredTrait =
+  | "ACTIVE"
+  | "AFFECTIONATE"
+  | "CALM"
+  | "INDEPENDENT"
+  | "FRIENDLY_TO_STRANGERS"
+  | "PLAYFUL"
+  | "TIMID";
 export type ProfileStatus = "INCOMPLETE" | "COMPLETE";
 
 export type Lifestyle = {

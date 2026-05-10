@@ -32,6 +32,7 @@ export function useUpdateMyProfileMutation() {
   return useMutation({
     mutationFn: authRepository.updateMyProfile,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: authQueryKeys.session() });
       queryClient.invalidateQueries({ queryKey: authQueryKeys.profile() });
     },
   });
