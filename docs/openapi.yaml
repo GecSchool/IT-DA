@@ -448,6 +448,34 @@ paths:
               schema:
                 $ref: "#/components/schemas/AdoptionCreateResponse"
 
+  /adoptions/{adoptionId}:
+    put:
+      tags: [Adoption]
+      summary: 내 입양 신청 수정
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/AdoptionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdoptionUpdateRequest"
+      responses:
+        "200":
+          description: 입양 신청 수정 성공
+    delete:
+      tags: [Adoption]
+      summary: 내 입양 신청 삭제
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/AdoptionId"
+      responses:
+        "200":
+          description: 입양 신청 삭제 성공
+
   /adoptions/applicants:
     get:
       tags: [Adoption]
@@ -1104,6 +1132,13 @@ components:
         adoptionId:
           type: integer
 
+    AdoptionUpdateRequest:
+      type: object
+      required: [introduction]
+      properties:
+        introduction:
+          type: string
+
     AdoptionApplicant:
       type: object
       required: [adoptionId, dogId, applicant, matchScore, introduction, status, appliedAt]
@@ -1135,7 +1170,7 @@ components:
 
     MyAdoption:
       type: object
-      required: [adoptionId, dog, status, appliedAt]
+      required: [adoptionId, dog, status, introduction, appliedAt]
       properties:
         adoptionId:
           type: integer
@@ -1143,6 +1178,8 @@ components:
           $ref: "#/components/schemas/MyAdoptionDog"
         status:
           $ref: "#/components/schemas/AdoptionStatus"
+        introduction:
+          type: string
         contactInfo:
           $ref: "#/components/schemas/ContactInfo"
         appliedAt:

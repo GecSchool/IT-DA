@@ -510,6 +510,22 @@
 }
 ```
 
+`PUT /adoptions/{adoptionId}` 🔒 — 내 입양 신청 수정
+
+- Request:
+
+```json
+{
+    "introduction": "string"
+}
+```
+
+- Response: 200 OK
+
+`DELETE /adoptions/{adoptionId}` 🔒 — 내 입양 신청 삭제
+
+- Response: 200 OK
+
 `GET /adoptions/applicants` 🔒 — 신청자 목록 조회 (임보자용)
 
 - Response:
@@ -565,6 +581,7 @@
             "thumbnailUrl": "string"
         },
         "status": "PENDING | ACCEPTED | REJECTED | COMPLETE",
+        "introduction": "string",
         "contactInfo": {
             "email": "string"
         },
