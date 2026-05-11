@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { adoptionRepository } from "../services";
 import type { AdoptionApplicant, AdoptionStatusUpdate } from "../types/adoption";
+import type { AdoptionUpdatePayload } from "../types/adoption-payload";
 import { adoptionQueryKeys } from "./adoption-query-keys";
 
 type UpdateAdoptionStatusVariables = {
@@ -9,11 +10,39 @@ type UpdateAdoptionStatusVariables = {
   status: AdoptionStatusUpdate;
 };
 
+type UpdateAdoptionVariables = {
+  adoptionId: number;
+  payload: AdoptionUpdatePayload;
+};
+
 export function useCreateAdoptionMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: adoptionRepository.createAdoption,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: adoptionQueryKeys.mine() });
+    },
+  });
+}
+
+export function useUpdateAdoptionMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ adoptionId, payload }: UpdateAdoptionVariables) =>
+      adoptionRepository.updateAdoption(adoptionId, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: adoptionQueryKeys.mine() });
+    },
+  });
+}
+
+export function useDeleteAdoptionMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (adoptionId: number) => adoptionRepository.deleteAdoption(adoptionId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: adoptionQueryKeys.mine() });
     },

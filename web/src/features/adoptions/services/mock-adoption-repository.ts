@@ -1,7 +1,7 @@
 import type { AdoptionRepository } from "./adoption-repository";
 import type { AdoptionApplicant, MyAdoption } from "../types/adoption";
 
-let nextAdoptionId = 3;
+let nextAdoptionId = 5;
 
 let mockApplicants: AdoptionApplicant[] = [
   {
@@ -51,7 +51,47 @@ let mockMyAdoptions: MyAdoption[] = [
       status: "AVAILABLE",
     },
     status: "PENDING",
+    introduction: "매일 산책할 수 있고 조용한 환경에서 천천히 적응시킬 수 있어요.",
     appliedAt: "2026-05-08T12:00:00.000Z",
+  },
+  {
+    adoptionId: 2,
+    dog: {
+      dogId: 3,
+      name: "보리",
+      thumbnailUrl: "/mock/dogs/bori-1.jpg",
+      status: "AVAILABLE",
+    },
+    status: "PENDING",
+    introduction: "강아지와 생활한 경험이 있고 주말마다 긴 산책을 할 수 있어요.",
+    appliedAt: "2026-05-06T15:20:00.000Z",
+  },
+  {
+    adoptionId: 3,
+    dog: {
+      dogId: 5,
+      name: "밤비",
+      thumbnailUrl: "/mock/dogs/bambi-1.jpg",
+      status: "AVAILABLE",
+    },
+    status: "ACCEPTED",
+    introduction: "재택근무를 하고 있어서 적응 기간 동안 오래 곁에 있을 수 있어요.",
+    contactInfo: {
+      email: "foster@example.com",
+    },
+    appliedAt: "2026-05-04T10:00:00.000Z",
+  },
+  {
+    adoptionId: 4,
+    dog: {
+      dogId: 6,
+      name: "모카",
+      thumbnailUrl: "/mock/dogs/moca-1.jpg",
+      status: "AVAILABLE",
+    },
+    status: "REJECTED",
+    introduction: "가족 모두 입양에 동의했고 꾸준히 케어할 준비가 되어 있어요.",
+    appliedAt: "2026-05-03T09:30:00.000Z",
   },
 ];
 
@@ -71,12 +111,28 @@ export function createMockAdoptionRepository(): AdoptionRepository {
             status: "AVAILABLE",
           },
           status: "PENDING",
+          introduction: payload.introduction,
           appliedAt: new Date().toISOString(),
         },
         ...mockMyAdoptions,
       ];
 
       return { adoptionId };
+    },
+
+    async updateAdoption(adoptionId, payload) {
+      mockMyAdoptions = mockMyAdoptions.map((adoption) =>
+        adoption.adoptionId === adoptionId
+          ? {
+              ...adoption,
+              introduction: payload.introduction,
+            }
+          : adoption
+      );
+    },
+
+    async deleteAdoption(adoptionId) {
+      mockMyAdoptions = mockMyAdoptions.filter((adoption) => adoption.adoptionId !== adoptionId);
     },
 
     async getApplicants() {
