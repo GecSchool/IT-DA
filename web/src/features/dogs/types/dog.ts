@@ -12,9 +12,17 @@ export type DogTrait =
 export type WalkAmount = "UNDER_30M" | "1H" | "OVER_2H";
 export type BarkingLevel = "LOW" | "MEDIUM" | "HIGH";
 export type DogStatus = "AVAILABLE" | "ADOPTED";
+export type ViewerAdoptionStatus = "PENDING" | "ACCEPTED" | "REJECTED" | "COMPLETE";
+
+export type ViewerAdoption = {
+  adoptionId: number;
+  status: ViewerAdoptionStatus;
+};
 
 export type DogDetail = {
   dogId: number;
+  isMine: boolean;
+  viewerAdoption: ViewerAdoption | null;
   name: string;
   gender: Gender;
   breed: string;
