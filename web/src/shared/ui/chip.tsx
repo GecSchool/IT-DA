@@ -6,7 +6,7 @@ import type { ButtonHTMLAttributes } from "react";
 import { cn } from "@/shared/lib/cn";
 
 const chipVariants = cva(
-  "inline-flex shrink-0 items-center justify-center rounded-pill border px-[14px] py-[7px] text-[13px] leading-normal transition-colors disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex h-9 shrink-0 items-center justify-center rounded-pill border px-[14px] text-[13px] leading-none transition-colors disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       selected: {
