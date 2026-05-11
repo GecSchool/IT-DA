@@ -7,6 +7,7 @@ let mockApplicants: AdoptionApplicant[] = [
   {
     adoptionId: 1,
     dogId: 1,
+    dogName: "초코",
     applicant: {
       userId: 3,
       nickname: "산책러버",
@@ -22,6 +23,7 @@ let mockApplicants: AdoptionApplicant[] = [
   {
     adoptionId: 2,
     dogId: 2,
+    dogName: "두부",
     applicant: {
       userId: 4,
       nickname: "따뜻한집",

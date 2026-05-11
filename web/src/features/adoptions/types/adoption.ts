@@ -7,6 +7,7 @@ export type AdoptionStatusUpdate = "ACCEPTED" | "REJECTED" | "COMPLETE";
 export type AdoptionApplicant = {
   adoptionId: number;
   dogId: number;
+  dogName: string;
   applicant: {
     userId: number;
     nickname: string;
