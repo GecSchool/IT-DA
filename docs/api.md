@@ -204,6 +204,11 @@
 ```json
 {
     "dogId": 1,
+    "isMine": false,
+    "viewerAdoption": {
+        "adoptionId": 10,
+        "status": "PENDING | ACCEPTED | REJECTED | COMPLETE"
+    },
     "name": "string",
     "gender": "MALE",
     "breed": "string",
@@ -230,6 +235,10 @@
     "applicationCount": 3
 }
 ```
+
+> `isMine`은 현재 로그인한 사용자가 해당 강아지 공고의 임시보호자인지 여부
+> `viewerAdoption`은 현재 로그인한 사용자가 해당 강아지에 신청한 입양 신청 정보
+> 신청하지 않은 경우 `viewerAdoption`은 `null`
 
 `PUT /dogs/{dogId}` 🔒 — 강아지 정보 수정
 
