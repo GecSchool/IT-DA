@@ -1,9 +1,11 @@
 export { Avatar } from "./avatar";
 export { Badge } from "./badge";
+export { BottomSheet, BottomSheetItem } from "./bottom-sheet";
 export { Button } from "./button";
 export { Chip } from "./chip";
 export { Dialog } from "./dialog";
 export { Divider } from "./divider";
+export { DropdownMenu } from "./dropdown-menu";
 export { EmptyState } from "./empty-state";
 export { Heading } from "./heading";
 export { IconButton } from "./icon-button";

@@ -742,16 +742,33 @@ components:
       allOf:
         - $ref: "#/components/schemas/DogBase"
         - type: object
-          required: [dogId, size, status, applicationCount]
+          required: [dogId, isMine, viewerAdoption, size, status, applicationCount]
           properties:
             dogId:
               type: integer
+            isMine:
+              type: boolean
+              description: 현재 로그인한 사용자가 해당 강아지 공고의 임시보호자인지 여부
+            viewerAdoption:
+              allOf:
+                - $ref: "#/components/schemas/ViewerAdoption"
+              nullable: true
+              description: 현재 로그인한 사용자가 해당 강아지에 신청한 입양 신청 정보. 신청하지 않은 경우 null.
             size:
               $ref: "#/components/schemas/DogSize"
             status:
               $ref: "#/components/schemas/DogStatus"
             applicationCount:
               type: integer
+
+    ViewerAdoption:
+      type: object
+      required: [adoptionId, status]
+      properties:
+        adoptionId:
+          type: integer
+        status:
+          $ref: "#/components/schemas/AdoptionStatus"
 
     DogBase:
       type: object
