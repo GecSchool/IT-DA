@@ -16,6 +16,7 @@ type DialogProps = {
   children: ReactNode;
   footer?: ReactNode;
   className?: string;
+  hideHeader?: boolean;
   onClose?: () => void;
   onOpenChange?: (open: boolean) => void;
 };
@@ -27,6 +28,7 @@ export function Dialog({
   children,
   footer,
   className,
+  hideHeader = false,
   onClose,
   onOpenChange,
 }: DialogProps) {
@@ -48,7 +50,10 @@ export function Dialog({
             className
           )}
         >
-          {(title || description || onClose) && (
+          {hideHeader && title ? (
+            <DialogPrimitive.Title className="sr-only">{title}</DialogPrimitive.Title>
+          ) : null}
+          {!hideHeader && (title || description || onClose) && (
             <header className="mb-md flex items-start justify-between gap-md">
               <div className="min-w-0">
                 {title ? (

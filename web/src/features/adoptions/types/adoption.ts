@@ -33,6 +33,7 @@ export type MyAdoption = {
     status?: DogStatus;
   };
   status: AdoptionStatus;
+  introduction: string;
   contactInfo?: {
     email: string;
   };

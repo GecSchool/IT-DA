@@ -34,9 +34,11 @@ export function ApplicantManagementPage() {
       </header>
 
       <ApplicantFilterRow
-        allFilterValue={filter.allFilterValue}
-        selectedDogName={filter.selectedDogName}
-        dogNames={dogNames}
+        selectedValue={filter.selectedDogName}
+        options={[
+          { value: filter.allFilterValue, label: "전체" },
+          ...dogNames.map((dogName) => ({ value: dogName, label: dogName })),
+        ]}
         onSelect={filter.selectDogName}
       />
 
