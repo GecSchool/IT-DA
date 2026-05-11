@@ -1,6 +1,5 @@
 "use client";
 
-import type { DogDetail } from "@/features/dogs/types/dog";
 import { DogDetailHeader } from "@/features/dogs/components/dog-detail-header";
 import { DogFosterNote } from "@/features/dogs/components/dog-foster-note";
 import { DogInfoSection } from "@/features/dogs/components/dog-info-section";
@@ -9,11 +8,9 @@ import { EmptyState, Spinner, Text } from "@/shared/ui";
 
 type DogDetailSectionProps = {
   dogId: number;
-  isApplying?: boolean;
-  onApply: (dog: DogDetail) => void;
 };
 
-export function DogDetailSection({ dogId, isApplying, onApply }: DogDetailSectionProps) {
+export function DogDetailSection({ dogId }: DogDetailSectionProps) {
   const {
     dog,
     viewerMode,
@@ -25,6 +22,10 @@ export function DogDetailSection({ dogId, isApplying, onApply }: DogDetailSectio
     handleEditDog,
     handleDeleteDog,
   } = useDogDetailSection(dogId);
+
+  const handleApply = () => {
+    console.log("apply adoption", { dogId: dog?.dogId });
+  };
 
   if (isLoading) {
     return (
@@ -49,10 +50,9 @@ export function DogDetailSection({ dogId, isApplying, onApply }: DogDetailSectio
       <DogDetailHeader
         dog={dog}
         viewerMode={viewerMode}
-        isApplying={isApplying}
         isDeleting={isDeleting}
         onViewApplicants={handleViewApplicants}
-        onApply={() => onApply(dog)}
+        onApply={handleApply}
         onViewAdoption={handleViewAdoption}
         onEdit={handleEditDog}
         onDelete={handleDeleteDog}
