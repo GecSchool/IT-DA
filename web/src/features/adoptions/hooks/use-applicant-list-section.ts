@@ -16,7 +16,7 @@ export function useApplicantListSection() {
   };
 
   const handleViewAll = () => {
-    router.push("/adoptions");
+    router.push("/dogs/applicants");
   };
 
   return {
