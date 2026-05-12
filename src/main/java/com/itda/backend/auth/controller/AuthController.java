@@ -44,7 +44,17 @@ public class AuthController {
     @PostMapping("/logout")
     public void logout(@AuthUser Long userId, HttpServletResponse response) {
         refreshTokenService.deleteByUserId(userId);
+        clearRefreshTokenCookie(response);
+    }
 
+    @DeleteMapping("/account")
+    public void deleteAccount(@AuthUser Long userId, HttpServletResponse response) {
+        refreshTokenService.deleteByUserId(userId);
+        userService.deleteAccount(userId);
+        clearRefreshTokenCookie(response);
+    }
+
+    private void clearRefreshTokenCookie(HttpServletResponse response) {
         Cookie cookie = new Cookie("refreshToken", null);
         cookie.setHttpOnly(true);
         cookie.setPath("/");

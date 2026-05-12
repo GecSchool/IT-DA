@@ -41,6 +41,11 @@ public class UserService {
     }
 
     @Transactional
+    public void deleteAccount(Long userId) {
+        userRepository.delete(getById(userId));
+    }
+
+    @Transactional
     public void updateProfile(Long userId, UpdateUserRequest request) {
         User user = getById(userId);
 
