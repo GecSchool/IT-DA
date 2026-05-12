@@ -23,6 +23,7 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(unique = true)
     private String nickname;
 
     private String regionSido;
@@ -37,6 +38,9 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private OAuthProvider provider;
 
+    @Embedded
+    private Lifestyle lifestyle;
+
     @Builder
     public User(String email, String name, OAuthProvider provider) {
         this.email = email;
@@ -49,6 +53,23 @@ public class User extends BaseTimeEntity {
         this.nickname = nickname;
         this.regionSido = regionSido;
         this.regionSigungu = regionSigungu;
-        this.profileStatus = ProfileStatus.COMPLETE;
+    }
+
+    public void updateProfile(String nickname,
+                              String regionSido,
+                              String regionSigungu,
+                              Lifestyle lifestyle) {
+        this.nickname = nickname;
+        this.regionSido = regionSido;
+        this.regionSigungu = regionSigungu;
+        this.lifestyle = lifestyle;
+
+        if (lifestyle != null && lifestyle.isComplete()) {
+            this.profileStatus = ProfileStatus.COMPLETE;
+        }
+    }
+
+    public boolean hasCompleteLifestyle() {
+        return lifestyle != null && lifestyle.isComplete();
     }
 }

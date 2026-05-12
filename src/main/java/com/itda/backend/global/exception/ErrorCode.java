@@ -20,7 +20,9 @@ public enum ErrorCode {
 
     // User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "사용자를 찾을 수 없습니다"),
-    DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "U002", "이미 사용 중인 닉네임입니다");
+    DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "U002", "이미 사용 중인 닉네임입니다"),
+    LIFESTYLE_NOT_FOUND(HttpStatus.BAD_REQUEST, "U003", "라이프스타일을 먼저 입력해주세요"),
+    INVALID_NICKNAME(HttpStatus.BAD_REQUEST, "U004", "닉네임 형식이 올바르지 않습니다");
 
     private final HttpStatus status;
     private final String code;
