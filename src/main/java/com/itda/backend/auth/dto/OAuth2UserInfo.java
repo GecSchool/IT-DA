@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Getter
 @Builder
-public class OAuth2UserInfo {
+public class OAuth2UserInfo{
     private String email;
     private String name;
 
