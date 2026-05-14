@@ -18,7 +18,7 @@ export default async function DogEditPage({ params }: DogEditPageProps) {
 
   return (
     <section className="flex w-full max-w-[900px] justify-center">
-      <DogEditSection />
+      <DogEditSection dogId={numericDogId} />
     </section>
   );
 }
