@@ -1,10 +1,14 @@
 package com.itda.backend.post.repository;
 
 import com.itda.backend.post.domain.Comment;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findByPostIdAndParentIsNullOrderByCreatedAtAsc(Long postId);
+
+    @Query("SELECT c FROM Comment c WHERE c.post.id = :postId AND c.parent IS NULL AND (:cursor IS NULL OR c.id > :cursor) ORDER BY c.id ASC")
+    List<Comment> findByPostIdWithCursor(Long postId, Long cursor, Pageable pageable);
 }

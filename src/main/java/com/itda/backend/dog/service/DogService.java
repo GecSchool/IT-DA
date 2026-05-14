@@ -14,6 +14,8 @@ import com.itda.backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.itda.backend.dog.dto.response.ViewerAdoptionResponse;
+import com.itda.backend.dog.dto.response.DogRecentResponse;
 
 import java.util.List;
 
@@ -42,11 +44,11 @@ public class DogService {
                 .toList();
     }
 
-    public List<DogSummaryResponse> getRecentDogs(int limit) {
+    public List<DogRecentResponse> getRecentDogs(int limit) {
         return dogRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
                 .limit(limit)
-                .map(dog -> DogSummaryResponse.from(dog, adoptionRepository.countByDogId(dog.getId())))
+                .map(DogRecentResponse::from)
                 .toList();
     }
 
@@ -54,7 +56,15 @@ public class DogService {
         Dog dog = getById(dogId);
         boolean isMine = userId != null && dog.getFoster().getId().equals(userId);
         int applicationCount = adoptionRepository.countByDogId(dogId);
-        return DogDetailResponse.from(dog, isMine, applicationCount);
+
+        ViewerAdoptionResponse viewerAdoption = null;
+        if (userId != null && !isMine) {
+            viewerAdoption = adoptionRepository.findByApplicantIdAndDogId(userId, dogId)
+                    .map(ViewerAdoptionResponse::from)
+                    .orElse(null);
+        }
+
+        return DogDetailResponse.from(dog, isMine, applicationCount, viewerAdoption);
     }
 
     @Transactional
@@ -113,6 +123,14 @@ public class DogService {
 
     private void validateDuplicateImageUrls(List<String> imageUrls) {
         if (imageUrls == null) return;
+
+        boolean hasInvalid = imageUrls.stream()
+                .anyMatch(url -> url == null || url.isBlank());
+
+        if (hasInvalid) {
+            throw new BusinessException(ErrorCode.INVALID_INPUT);
+        }
+
         if (imageUrls.size() != imageUrls.stream().distinct().count()) {
             throw new BusinessException(ErrorCode.DUPLICATE_IMAGE_URL);
         }

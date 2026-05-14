@@ -7,6 +7,7 @@ import com.itda.backend.dog.service.DogService;
 import com.itda.backend.global.resolver.AuthUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import com.itda.backend.dog.dto.response.DogRecentResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class DogController {
     }
 
     @GetMapping("/recent")
-    public List<DogSummaryResponse> getRecentDogs(
+    public List<DogRecentResponse> getRecentDogs(
             @RequestParam(defaultValue = "10") int limit) {
         return dogService.getRecentDogs(limit);
     }
@@ -39,6 +40,7 @@ public class DogController {
     @GetMapping("/{dogId}")
     public DogDetailResponse getDog(@PathVariable Long dogId,
                                     @AuthUser Long userId) {
+        // RecentViewService 완성 후 호출, 그냥 상세조회만 함
         return dogService.getDetail(dogId, userId);
     }
 

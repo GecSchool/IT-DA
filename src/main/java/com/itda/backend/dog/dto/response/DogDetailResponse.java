@@ -31,9 +31,10 @@ public record DogDetailResponse(
         String fosterNote,
         List<String> imageUrls,
         DogStatus status,
-        int applicationCount
+        int applicationCount,
+        ViewerAdoptionResponse viewerAdoption
 ) {
-    public static DogDetailResponse from(Dog dog, boolean isMine, int applicationCount) {
+    public static DogDetailResponse from(Dog dog, boolean isMine, int applicationCount, ViewerAdoptionResponse viewerAdoption) {
         List<String> imageUrls = dog.getImages().stream()
                 .map(DogImage::getImageUrl)
                 .toList();
@@ -63,7 +64,8 @@ public record DogDetailResponse(
                 dog.getFosterNote(),
                 imageUrls,
                 dog.getStatus(),
-                applicationCount
+                applicationCount,
+                viewerAdoption
         );
     }
 }

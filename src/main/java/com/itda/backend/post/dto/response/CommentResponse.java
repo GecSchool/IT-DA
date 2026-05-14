@@ -8,12 +8,13 @@ import java.util.List;
 public record CommentResponse(
         Long commentId,
         Long parentId,
-        Long authorId,
-        String authorNickname,
+        AuthorInfo author,
         String content,
         LocalDateTime createdAt,
         List<CommentResponse> replies
 ) {
+    public record AuthorInfo(Long userId, String nickname) {}
+
     public static CommentResponse from(Comment comment) {
         List<CommentResponse> replies = comment.getReplies().stream()
                 .map(CommentResponse::from)
@@ -21,8 +22,7 @@ public record CommentResponse(
         return new CommentResponse(
                 comment.getId(),
                 comment.getParent() != null ? comment.getParent().getId() : null,
-                comment.getAuthor().getId(),
-                comment.getAuthor().getNickname(),
+                new AuthorInfo(comment.getAuthor().getId(), comment.getAuthor().getNickname()),
                 comment.getContent(),
                 comment.getCreatedAt(),
                 replies

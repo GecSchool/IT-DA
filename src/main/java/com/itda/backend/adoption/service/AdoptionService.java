@@ -63,6 +63,7 @@ public class AdoptionService {
         adoptionRepository.delete(adoption);
     }
 
+    // MatchScoreCalculator 완성 후 matchScore 계산 로직 추가
     public List<ApplicantResponse> getApplicants(Long userId) {
         return adoptionRepository.findByDogFosterIdOrderByCreatedAtDesc(userId)
                 .stream()
@@ -81,7 +82,14 @@ public class AdoptionService {
     public void updateStatus(Long adoptionId, Long userId, AdoptionStatusRequest request) {
         Adoption adoption = getById(adoptionId);
         validateFoster(adoption, userId);
-        validateStatusTransition(adoption.getStatus(), request.status()); // 추가
+        validateStatusTransition(adoption.getStatus(), request.status());
+
+        if (request.status() == AdoptionStatus.ACCEPTED
+                && adoption.getStatus() != AdoptionStatus.ACCEPTED
+                && adoptionRepository.existsByDogIdAndStatus(adoption.getDog().getId(), AdoptionStatus.ACCEPTED)) {
+            throw new BusinessException(ErrorCode.INVALID_INPUT);
+        }
+
         adoption.updateStatus(request.status());
     }
 
@@ -103,14 +111,24 @@ public class AdoptionService {
     }
 
     private void validateStatusTransition(AdoptionStatus current, AdoptionStatus next) {
-        if (current == AdoptionStatus.COMPLETE) {
+        if (next == null) {
             throw new BusinessException(ErrorCode.INVALID_INPUT);
         }
-        if (current == AdoptionStatus.REJECTED && next != AdoptionStatus.REJECTED) {
-            throw new BusinessException(ErrorCode.INVALID_INPUT);
+
+        if (current == AdoptionStatus.PENDING) {
+            if (next != AdoptionStatus.ACCEPTED && next != AdoptionStatus.REJECTED) {
+                throw new BusinessException(ErrorCode.INVALID_INPUT);
+            }
+            return;
         }
-        if (current == AdoptionStatus.ACCEPTED && next == AdoptionStatus.PENDING) {
-            throw new BusinessException(ErrorCode.INVALID_INPUT);
+
+        if (current == AdoptionStatus.ACCEPTED) {
+            if (next != AdoptionStatus.COMPLETE) {
+                throw new BusinessException(ErrorCode.INVALID_INPUT);
+            }
+            return;
         }
+
+        throw new BusinessException(ErrorCode.INVALID_INPUT);
     }
 }

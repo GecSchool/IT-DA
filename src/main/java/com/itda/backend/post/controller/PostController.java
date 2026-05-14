@@ -5,10 +5,12 @@ import com.itda.backend.post.dto.request.CommentRequest;
 import com.itda.backend.post.dto.request.PostRequest;
 import com.itda.backend.post.dto.response.CommentResponse;
 import com.itda.backend.post.dto.response.PostDetailResponse;
-import com.itda.backend.post.dto.response.PostSummaryResponse;
 import com.itda.backend.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import com.itda.backend.post.dto.response.CommentPageResponse;
+import com.itda.backend.post.dto.response.CommentCreateResponse;
+import com.itda.backend.post.dto.response.PostPageResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -20,8 +22,11 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/dogs/{dogId}/posts")
-    public List<PostSummaryResponse> getPostsByDog(@PathVariable Long dogId) {
-        return postService.getPostsByDog(dogId);
+    public PostPageResponse getPostsByDog(
+            @PathVariable Long dogId,
+            @RequestParam(required = false) Long cursor,
+            @RequestParam(defaultValue = "10") int limit) {
+        return postService.getPostsByDog(dogId, cursor, limit);
     }
 
     @PostMapping("/posts")
@@ -32,8 +37,10 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<PostSummaryResponse> getFeed() {
-        return postService.getFeed();
+    public PostPageResponse getFeed(
+            @RequestParam(required = false) Long cursor,
+            @RequestParam(defaultValue = "10") int limit) {
+        return postService.getFeed(cursor, limit);
     }
 
     @GetMapping("/posts/{postId}")
@@ -62,16 +69,18 @@ public class PostController {
     }
 
     @PostMapping("/posts/{postId}/comments")
-    public Map<String, Long> createComment(@PathVariable Long postId,
-                                           @AuthUser Long userId,
-                                           @RequestBody CommentRequest request) {
-        Long commentId = postService.createComment(postId, userId, request);
-        return Map.of("commentId", commentId);
+    public CommentCreateResponse createComment(@PathVariable Long postId,
+                                               @AuthUser Long userId,
+                                               @RequestBody CommentRequest request) {
+        return postService.createComment(postId, userId, request);
     }
 
     @GetMapping("/posts/{postId}/comments")
-    public List<CommentResponse> getComments(@PathVariable Long postId) {
-        return postService.getComments(postId);
+    public CommentPageResponse getComments(
+            @PathVariable Long postId,
+            @RequestParam(required = false) Long cursor,
+            @RequestParam(defaultValue = "20") int limit) {
+        return postService.getComments(postId, cursor, limit);
     }
 
     @DeleteMapping("/posts/{postId}/comments/{commentId}")

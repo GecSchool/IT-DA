@@ -1,5 +1,6 @@
 package com.itda.backend.post.service;
 
+import org.springframework.data.domain.PageRequest;
 import com.itda.backend.dog.domain.Dog;
 import com.itda.backend.dog.service.DogService;
 import com.itda.backend.global.exception.BusinessException;
@@ -21,6 +22,12 @@ import com.itda.backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.itda.backend.post.dto.response.PostPageResponse;
+import com.itda.backend.post.dto.response.CommentPageResponse;
+import com.itda.backend.post.dto.response.CommentCreateResponse;
+
+
+
 
 import java.util.List;
 import java.util.Map;
@@ -57,18 +64,21 @@ public class PostService {
         return postRepository.save(post).getId();
     }
 
-    public List<PostSummaryResponse> getPostsByDog(Long dogId) {
-        return postRepository.findByDogIdOrderByCreatedAtDesc(dogId)
+    public PostPageResponse getPostsByDog(Long dogId, Long cursor, int limit) {
+        dogService.getById(dogId);
+        List<PostSummaryResponse> items = postRepository.findByDogIdWithCursor(dogId, cursor, PageRequest.of(0, limit + 1))
                 .stream()
                 .map(PostSummaryResponse::from)
                 .toList();
+        return PostPageResponse.of(items, limit);
     }
 
-    public List<PostSummaryResponse> getFeed() {
-        return postRepository.findAllByOrderByCreatedAtDesc()
+    public PostPageResponse getFeed(Long cursor, int limit) {
+        List<PostSummaryResponse> items = postRepository.findFeedByCursor(cursor, PageRequest.of(0, limit + 1))
                 .stream()
                 .map(PostSummaryResponse::from)
                 .toList();
+        return PostPageResponse.of(items, limit);
     }
 
     public PostDetailResponse getPost(Long postId, Long userId) {
@@ -115,7 +125,7 @@ public class PostService {
     }
 
     @Transactional
-    public Long createComment(Long postId, Long userId, CommentRequest request) {
+    public CommentCreateResponse createComment(Long postId, Long userId, CommentRequest request) {
         Post post = getById(postId);
         User author = userService.getById(userId);
         Comment parent = null;
@@ -133,14 +143,16 @@ public class PostService {
                 .parent(parent)
                 .content(request.content())
                 .build();
-        return commentRepository.save(comment).getId();
+        return CommentCreateResponse.from(commentRepository.save(comment));
     }
 
-    public List<CommentResponse> getComments(Long postId) {
-        return commentRepository.findByPostIdAndParentIsNullOrderByCreatedAtAsc(postId)
+    public CommentPageResponse getComments(Long postId, Long cursor, int limit) {
+        getById(postId);
+        List<CommentResponse> items = commentRepository.findByPostIdWithCursor(postId, cursor, PageRequest.of(0, limit + 1))
                 .stream()
                 .map(CommentResponse::from)
                 .toList();
+        return CommentPageResponse.of(items, limit);
     }
 
     @Transactional
@@ -183,6 +195,14 @@ public class PostService {
     }
     private void validateDuplicateImageUrls(List<String> imageUrls) {
         if (imageUrls == null) return;
+
+        boolean hasInvalid = imageUrls.stream()
+                .anyMatch(url -> url == null || url.isBlank());
+
+        if (hasInvalid) {
+            throw new BusinessException(ErrorCode.INVALID_INPUT);
+        }
+
         if (imageUrls.size() != imageUrls.stream().distinct().count()) {
             throw new BusinessException(ErrorCode.DUPLICATE_IMAGE_URL);
         }
