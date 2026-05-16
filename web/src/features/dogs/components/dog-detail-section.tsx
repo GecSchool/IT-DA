@@ -1,5 +1,6 @@
 "use client";
 
+import { AdoptionApplicationFormModal } from "@/features/adoptions/components/adoption-application-form-modal";
 import { DogDetailHeader } from "@/features/dogs/components/dog-detail-header";
 import { DogFosterNote } from "@/features/dogs/components/dog-foster-note";
 import { DogInfoSection } from "@/features/dogs/components/dog-info-section";
@@ -16,16 +17,17 @@ export function DogDetailSection({ dogId }: DogDetailSectionProps) {
     viewerMode,
     isLoading,
     isError,
+    isApplicationModalOpen,
+    isApplying,
     isDeleting,
     handleViewApplicants,
     handleViewAdoption,
+    handleOpenApplicationModal,
+    handleCloseApplicationModal,
+    handleSubmitApplication,
     handleEditDog,
     handleDeleteDog,
   } = useDogDetailSection(dogId);
-
-  const handleApply = () => {
-    console.log("apply adoption", { dogId: dog?.dogId });
-  };
 
   if (isLoading) {
     return (
@@ -50,15 +52,24 @@ export function DogDetailSection({ dogId }: DogDetailSectionProps) {
       <DogDetailHeader
         dog={dog}
         viewerMode={viewerMode}
+        isApplying={isApplying}
         isDeleting={isDeleting}
         onViewApplicants={handleViewApplicants}
-        onApply={handleApply}
+        onApply={handleOpenApplicationModal}
         onViewAdoption={handleViewAdoption}
         onEdit={handleEditDog}
         onDelete={handleDeleteDog}
       />
       <DogFosterNote dog={dog} />
       <DogInfoSection dog={dog} />
+      <AdoptionApplicationFormModal
+        open={isApplicationModalOpen}
+        mode="create"
+        dogName={dog.name}
+        isSubmitting={isApplying}
+        onClose={handleCloseApplicationModal}
+        onSubmit={handleSubmitApplication}
+      />
     </>
   );
 }

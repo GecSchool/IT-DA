@@ -29,6 +29,10 @@ export function useAdoptionApplicationForm({
     mode: "onChange",
   });
   const values = useWatch({ control: form.control });
+  const introduction = values.introduction ?? "";
+  const fieldErrors = {
+    introduction: form.formState.errors.introduction?.message,
+  };
 
   useEffect(() => {
     if (!open) {
@@ -52,7 +56,10 @@ export function useAdoptionApplicationForm({
   return {
     form,
     values,
-    submitErrorMessage,
+    fieldErrors,
+    introductionLength: introduction.length,
+    maxIntroductionLength: 200,
+    submitErrorMessage: form.formState.submitCount > 0 ? submitErrorMessage : null,
     canSubmit: form.formState.isValid && form.formState.isDirty,
     handleSubmitApplication,
   };
