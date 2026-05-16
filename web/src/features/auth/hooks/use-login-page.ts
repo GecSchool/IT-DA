@@ -8,9 +8,9 @@ import { useSession } from "@/features/auth/hooks/use-session";
 export type SocialLoginProvider = "google" | "naver" | "kakao";
 
 const socialLoginPaths = {
-  google: "/auth/google",
-  naver: "/auth/naver",
-  kakao: "/auth/kakao",
+  google: "/oauth2/authorization/google",
+  naver: "/oauth2/authorization/naver",
+  kakao: "/oauth2/authorization/kakao",
 } satisfies Record<SocialLoginProvider, string>;
 
 const getSocialLoginUrl = (provider: SocialLoginProvider) => {

@@ -5,6 +5,7 @@ import com.itda.backend.dog.domain.Size;
 import com.itda.backend.user.domain.*;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,17 +19,65 @@ import java.util.List;
 @Component
 public class MatchScoreCalculator {
 
-    public int calculate(User user, Dog dog) {
-        Lifestyle lifestyle = user.getLifestyle();
-        if (lifestyle == null) return 0;
+    public record MatchResult(int score, List<String> matchReasons, List<String> cautionReasons) {}
 
+    public MatchResult calculateResult(User user, Dog dog) {
+        Lifestyle lifestyle = user.getLifestyle();
+        if (lifestyle == null) return new MatchResult(0, List.of(), List.of());
+
+        List<String> matchReasons = new ArrayList<>();
+        List<String> cautionReasons = new ArrayList<>();
         int score = 0;
-        score += sizeScore(lifestyle.getPreferredSize(), dog.getSize());
-        score += traitScore(lifestyle.getPreferredTraits(), dog.getTraits());
-        score += housingScore(lifestyle.getHousingType(), dog.getCanLiveInApartment());
-        score += familyScore(lifestyle.getFamilyType(), dog.getCanLiveWithChild());
-        score += petScore(lifestyle.getHasPet(), dog.getCanLiveWithDog(), dog.getCanLiveWithCat());
-        return score;
+
+        int sizeScore = sizeScore(lifestyle.getPreferredSize(), dog.getSize());
+        score += sizeScore;
+        if (sizeScore > 0) {
+            matchReasons.add("선호하는 크기와 잘 맞아요");
+        } else if (lifestyle.getPreferredSize() != null && lifestyle.getPreferredSize() != PreferredSize.ANY) {
+            cautionReasons.add("선호하는 크기와 다를 수 있어요");
+        }
+
+        int traitScore = traitScore(lifestyle.getPreferredTraits(), dog.getTraits());
+        score += traitScore;
+        if (traitScore >= 20) {
+            matchReasons.add("선호하는 성격과 잘 맞아요");
+        } else if (traitScore == 0 && lifestyle.getPreferredTraits() != null && !lifestyle.getPreferredTraits().isEmpty()) {
+            cautionReasons.add("선호하는 성격과 차이가 있어요");
+        }
+
+        int housingScore = housingScore(lifestyle.getHousingType(), dog.getCanLiveInApartment());
+        score += housingScore;
+        if (housingScore > 0 && lifestyle.getHousingType() == HousingType.APARTMENT) {
+            matchReasons.add("아파트 생활이 가능해요");
+        } else if (housingScore == 0 && lifestyle.getHousingType() == HousingType.APARTMENT) {
+            cautionReasons.add("아파트 생활이 어려울 수 있어요");
+        }
+
+        int familyScore = familyScore(lifestyle.getFamilyType(), dog.getCanLiveWithChild());
+        score += familyScore;
+        if (familyScore > 0 && lifestyle.getFamilyType() == FamilyType.WITH_CHILD) {
+            matchReasons.add("아이와 함께 생활할 수 있어요");
+        } else if (familyScore == 0 && lifestyle.getFamilyType() == FamilyType.WITH_CHILD) {
+            cautionReasons.add("아이가 있는 가정이라면 주의가 필요해요");
+        }
+
+        int petScore = petScore(lifestyle.getHasPet(), dog.getCanLiveWithDog(), dog.getCanLiveWithCat());
+        score += petScore;
+        if (petScore > 0 && lifestyle.getHasPet() == HasPet.DOG) {
+            matchReasons.add("다른 강아지와 잘 지낼 수 있어요");
+        } else if (petScore > 0 && lifestyle.getHasPet() == HasPet.CAT) {
+            matchReasons.add("고양이와 함께 지낼 수 있어요");
+        } else if (petScore == 0 && lifestyle.getHasPet() == HasPet.DOG) {
+            cautionReasons.add("다른 강아지와의 합사를 확인해주세요");
+        } else if (petScore == 0 && lifestyle.getHasPet() == HasPet.CAT) {
+            cautionReasons.add("고양이와의 합사를 확인해주세요");
+        }
+
+        return new MatchResult(score, matchReasons, cautionReasons);
+    }
+
+    public int calculate(User user, Dog dog) {
+        return calculateResult(user, dog).score();
     }
 
     private int sizeScore(PreferredSize preferred, Size dogSize) {

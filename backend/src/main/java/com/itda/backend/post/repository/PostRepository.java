@@ -14,4 +14,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p FROM Post p WHERE p.dog.id = :dogId AND (:cursor IS NULL OR p.id < :cursor) ORDER BY p.id DESC")
     List<Post> findByDogIdWithCursor(Long dogId, Long cursor, Pageable pageable);
+
+    List<Post> findTop6ByDogIdOrderByIdDesc(Long dogId);
 }
