@@ -6,15 +6,27 @@ import {
   dogTraitOptions,
   walkAmountOptions,
 } from "@/features/dogs/constants/dog-register-options";
-import type { DogDetail } from "@/features/dogs/types/dog";
+import type { BarkingLevel, DogTrait, WalkAmount } from "@/features/dogs/types/dog";
 import { Badge, Divider, Text } from "@/shared/ui";
 
 const barkingLevelLabels = createLabelMap(barkingLevelOptions);
 const dogTraitLabels = createLabelMap(dogTraitOptions);
 const walkAmountLabels = createLabelMap(walkAmountOptions);
 
+export type DogInfoSectionData = {
+  traits: DogTrait[];
+  walkAmount: WalkAmount;
+  isSeparationAnxiety?: boolean;
+  isToiletTrained: boolean;
+  barkingLevel: BarkingLevel;
+  canLiveInApartment: boolean;
+  canLiveWithChild: boolean;
+  canLiveWithDog: boolean;
+  canLiveWithCat: boolean;
+};
+
 type DogInfoSectionProps = {
-  dog: DogDetail;
+  dog: DogInfoSectionData;
 };
 
 export function DogInfoSection({ dog }: DogInfoSectionProps) {
@@ -38,10 +50,12 @@ export function DogInfoSection({ dog }: DogInfoSectionProps) {
           icon={<Clock className="size-4" aria-hidden />}
           label={`산책 ${walkAmountLabels[dog.walkAmount]}`}
         />
-        <InfoLine
-          icon={<Home className="size-4" aria-hidden />}
-          label={dog.isSeparationAnxiety ? "분리불안 있음" : "분리불안 없음"}
-        />
+        {typeof dog.isSeparationAnxiety === "boolean" ? (
+          <InfoLine
+            icon={<Home className="size-4" aria-hidden />}
+            label={dog.isSeparationAnxiety ? "분리불안 있음" : "분리불안 없음"}
+          />
+        ) : null}
         <InfoLine
           icon={<ShieldCheck className="size-4" aria-hidden />}
           label={dog.isToiletTrained ? "배변 훈련 완료" : "배변 훈련 필요"}

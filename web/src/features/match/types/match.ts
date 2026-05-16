@@ -1,4 +1,5 @@
 import type { BarkingLevel, DogSize, DogTrait, Gender, WalkAmount } from "@/features/dogs/types/dog";
+import type { DogPostSummary } from "@/features/posts/types/post";
 
 export type MatchRecommendation = {
   dogId: number;
@@ -21,8 +22,5 @@ export type MatchRecommendation = {
   matchScore: number;
   matchReasons: string[];
   cautionReasons: string[];
-  posts: {
-    postId: number;
-    thumbnailUrl: string;
-  }[];
+  posts: DogPostSummary[];
 };

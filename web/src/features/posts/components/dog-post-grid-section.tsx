@@ -2,7 +2,7 @@
 
 import { Image as ImageIcon } from "lucide-react";
 
-import { DogPostThumbnail } from "@/features/posts/components/dog-post-thumbnail";
+import { DogPostGrid } from "@/features/posts/components/dog-post-grid";
 import { useDogPostGridSection } from "@/features/posts/hooks/use-dog-post-grid-section";
 import { Button, EmptyState, Spinner, Text } from "@/shared/ui";
 
@@ -47,11 +47,7 @@ export function DogPostGridSection({ dogId }: DogPostGridSectionProps) {
 
   return (
     <section className="flex w-full flex-col gap-md">
-      <div className="grid w-full auto-rows-max grid-cols-3 gap-0">
-        {posts.map((post) => (
-          <DogPostThumbnail key={post.postId} post={post} />
-        ))}
-      </div>
+      <DogPostGrid posts={posts} />
       {hasNextPage ? (
         <div className="flex justify-center">
           <Button
