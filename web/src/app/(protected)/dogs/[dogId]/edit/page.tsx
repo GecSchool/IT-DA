@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { DogEditSection } from "@/features/dogs/components/dog-edit-section";
+import { DogEditForm } from "@/features/dogs/components/dog-edit-form";
 
 type DogEditPageProps = {
   params: Promise<{
@@ -18,7 +18,7 @@ export default async function DogEditPage({ params }: DogEditPageProps) {
 
   return (
     <section className="flex w-full max-w-[900px] justify-center">
-      <DogEditSection dogId={numericDogId} />
+      <DogEditForm dogId={numericDogId} />
     </section>
   );
 }
