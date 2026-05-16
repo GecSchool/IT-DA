@@ -25,7 +25,7 @@ public record ApplicantResponse(
 
     public record ContactInfo(String email) {}
 
-    public static ApplicantResponse from(Adoption adoption) {
+    public static ApplicantResponse of(Adoption adoption, int matchScore) {
         ContactInfo contactInfo = adoption.getStatus() == AdoptionStatus.ACCEPTED
                 ? new ContactInfo(adoption.getApplicant().getEmail())
                 : null;
@@ -49,7 +49,7 @@ public record ApplicantResponse(
                         familyType,
                         dailyOutTime
                 ),
-                0, // MatchService 완성 후 연동
+                matchScore,
                 adoption.getIntroduction(),
                 adoption.getStatus(),
                 contactInfo,

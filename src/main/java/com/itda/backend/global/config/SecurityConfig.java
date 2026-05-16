@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**", "/oauth2/**", "/login/**").permitAll()
                         .requestMatchers("/posts", "/posts/*", "/dogs/recent").permitAll()
                         .requestMatchers("/users/check-nickname").permitAll()
+                        .requestMatchers("/match/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth -> oauth

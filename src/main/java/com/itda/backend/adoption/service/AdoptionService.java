@@ -12,6 +12,7 @@ import com.itda.backend.dog.domain.Dog;
 import com.itda.backend.dog.service.DogService;
 import com.itda.backend.global.exception.BusinessException;
 import com.itda.backend.global.exception.ErrorCode;
+import com.itda.backend.match.domain.MatchScoreCalculator;
 import com.itda.backend.user.domain.User;
 import com.itda.backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class AdoptionService {
     private final AdoptionRepository adoptionRepository;
     private final UserService userService;
     private final DogService dogService;
+    private final MatchScoreCalculator matchScoreCalculator;
 
     @Transactional
     public Long apply(Long userId, AdoptionRequest request) {
@@ -63,11 +65,14 @@ public class AdoptionService {
         adoptionRepository.delete(adoption);
     }
 
-    // MatchScoreCalculator 완성 후 matchScore 계산 로직 추가
     public List<ApplicantResponse> getApplicants(Long userId) {
         return adoptionRepository.findByDogFosterIdOrderByCreatedAtDesc(userId)
                 .stream()
-                .map(ApplicantResponse::from)
+                .map(adoption -> {
+                    int score = matchScoreCalculator.calculate(
+                            adoption.getApplicant(), adoption.getDog());
+                    return ApplicantResponse.of(adoption, score);
+                })
                 .toList();
     }
 

@@ -9,6 +9,7 @@ import com.itda.backend.dog.dto.response.DogSummaryResponse;
 import com.itda.backend.dog.repository.DogRepository;
 import com.itda.backend.global.exception.BusinessException;
 import com.itda.backend.global.exception.ErrorCode;
+import com.itda.backend.match.service.RecentViewService;
 import com.itda.backend.user.domain.User;
 import com.itda.backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class DogService {
     private final DogRepository dogRepository;
     private final UserService userService;
     private final AdoptionRepository adoptionRepository;
+    private final RecentViewService recentViewService;
 
     @Transactional
     public Long register(Long userId, DogRequest request) {
@@ -54,6 +56,7 @@ public class DogService {
 
     public DogDetailResponse getDetail(Long dogId, Long userId) {
         Dog dog = getById(dogId);
+        if (userId != null) recentViewService.log(userId, dogId);
         boolean isMine = userId != null && dog.getFoster().getId().equals(userId);
         int applicationCount = adoptionRepository.countByDogId(dogId);
 
