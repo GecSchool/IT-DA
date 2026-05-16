@@ -1,10 +1,10 @@
 "use client";
 
-import { Dog } from "lucide-react";
+import { Dog, X } from "lucide-react";
 
 import type { AdoptionApplicationFormValues } from "@/features/adoptions/types/adoption-application-form";
 import { useAdoptionApplicationForm } from "@/features/adoptions/hooks/use-adoption-application-form";
-import { Button, Dialog, Text, Textarea } from "@/shared/ui";
+import { Button, Dialog, IconButton, Text, Textarea } from "@/shared/ui";
 
 type AdoptionApplicationFormModalProps = {
   open: boolean;
@@ -55,12 +55,22 @@ export function AdoptionApplicationFormModal({
       }}
       className="max-w-[500px] rounded-xl border border-border p-md shadow-lg"
     >
+      <IconButton
+        aria-label="입양 신청 모달 닫기"
+        variant="ghost"
+        size="sm"
+        className="absolute right-3 top-3"
+        onClick={onClose}
+        disabled={isSubmitting}
+      >
+        <X className="size-4" aria-hidden />
+      </IconButton>
       <form
         id="adoption-application-form"
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-4 pt-1"
         onSubmit={form.handleSubmitApplication}
       >
-        <div className="flex w-full items-center gap-3">
+        <div className="flex w-full items-center gap-3 pr-9">
           <div className="flex size-11 shrink-0 items-center justify-center rounded-pill bg-muted">
             <Dog className="size-[22px] text-muted-foreground" aria-hidden />
           </div>
@@ -77,10 +87,10 @@ export function AdoptionApplicationFormModal({
           </Text>
           <div className="flex items-center gap-0.5">
             <Text as="span" size="xs" color="muted">
-              {form.values.introduction?.length ?? 0}
+              {form.introductionLength}
             </Text>
             <Text as="span" size="xs" color="muted">
-              {" / 200"}
+              {` / ${form.maxIntroductionLength}`}
             </Text>
           </div>
         </div>
@@ -90,7 +100,7 @@ export function AdoptionApplicationFormModal({
           placeholder="내용을 입력하세요"
           rows={4}
           className="min-h-[90px]"
-          error={form.form.formState.errors.introduction?.message}
+          error={form.fieldErrors.introduction}
           {...form.form.register("introduction")}
         />
 
