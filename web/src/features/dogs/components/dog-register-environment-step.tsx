@@ -3,9 +3,9 @@
 import { ArrowLeft } from "lucide-react";
 import type { Path, PathValue } from "react-hook-form";
 
-import { booleanOptions } from "@/features/dogs/constants/dog-register-options";
+import { DogBooleanChoiceRow } from "@/features/dogs/components/dog-boolean-choice-row";
 import type { DogRegisterFormValues } from "@/features/dogs/types/dog-register-form";
-import { Button, Chip, Heading, Text, Textarea } from "@/shared/ui";
+import { Button, Heading, Text, Textarea } from "@/shared/ui";
 
 type DogRegisterEnvironmentStepProps = {
   values: Partial<DogRegisterFormValues>;
@@ -37,22 +37,22 @@ export function DogRegisterEnvironmentStep({
         <Text size="md" weight="semibold">
           함께할 수 있는 환경
         </Text>
-        <BooleanChoiceRow
+        <DogBooleanChoiceRow
           label="아파트 가능"
           value={values.canLiveInApartment}
           onChange={(value) => onFieldChange("canLiveInApartment", value)}
         />
-        <BooleanChoiceRow
+        <DogBooleanChoiceRow
           label="아이와 생활"
           value={values.canLiveWithChild}
           onChange={(value) => onFieldChange("canLiveWithChild", value)}
         />
-        <BooleanChoiceRow
+        <DogBooleanChoiceRow
           label="다른 개"
           value={values.canLiveWithDog}
           onChange={(value) => onFieldChange("canLiveWithDog", value)}
         />
-        <BooleanChoiceRow
+        <DogBooleanChoiceRow
           label="고양이"
           value={values.canLiveWithCat}
           onChange={(value) => onFieldChange("canLiveWithCat", value)}
@@ -88,30 +88,5 @@ export function DogRegisterEnvironmentStep({
         </Button>
       </div>
     </>
-  );
-}
-
-type BooleanChoiceRowProps = {
-  label: string;
-  value?: boolean;
-  onChange: (value: boolean) => void;
-};
-
-function BooleanChoiceRow({ label, value = false, onChange }: BooleanChoiceRowProps) {
-  return (
-    <div className="flex w-full items-center justify-between gap-md">
-      <Text>{label}</Text>
-      <div className="flex shrink-0 gap-sm">
-        {booleanOptions.map((option) => (
-          <Chip
-            key={option.value}
-            selected={String(value) === option.value}
-            onClick={() => onChange(option.value === "true")}
-          >
-            {option.label}
-          </Chip>
-        ))}
-      </div>
-    </div>
   );
 }

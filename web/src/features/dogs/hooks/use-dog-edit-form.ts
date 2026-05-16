@@ -2,19 +2,22 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch, type Path, type PathValue } from "react-hook-form";
 
-import { useCreateDogMutation } from "@/features/dogs/queries/dog-mutations";
-import type { DogTrait } from "@/features/dogs/types/dog";
+import { useDogDetailQuery, useUpdateDogMutation } from "@/features/dogs/queries";
+import type { DogDetail, DogTrait } from "@/features/dogs/types/dog";
 import {
   dogRegisterSchema,
-  dogRegisterStepFields,
-  dogRegisterStepSchemas,
   type DogRegisterFormValues,
-  type DogRegisterStep,
 } from "@/features/dogs/types/dog-register-form";
 import { sigunguOptionsBySido } from "@/shared/constants/region-options";
+
+const mockImageUrls = [
+  "/mock/dogs/register-1.jpg",
+  "/mock/dogs/register-2.jpg",
+  "/mock/dogs/register-3.jpg",
+];
 
 const defaultValues: DogRegisterFormValues = {
   imageUrls: [],
@@ -36,22 +39,46 @@ const defaultValues: DogRegisterFormValues = {
   fosterNote: "",
 };
 
-const mockImageUrls = [
-  "/mock/dogs/register-1.jpg",
-  "/mock/dogs/register-2.jpg",
-  "/mock/dogs/register-3.jpg",
-];
+const createDefaultValues = (dog: DogDetail): DogRegisterFormValues => ({
+  imageUrls: dog.imageUrls,
+  name: dog.name,
+  gender: dog.gender,
+  breed: dog.breed,
+  regionSido: dog.regionSido,
+  regionSigungu: dog.regionSigungu,
+  weight: dog.weight,
+  traits: dog.traits,
+  walkAmount: dog.walkAmount,
+  isSeparationAnxiety: dog.isSeparationAnxiety,
+  isToiletTrained: dog.isToiletTrained,
+  barkingLevel: dog.barkingLevel,
+  canLiveInApartment: dog.canLiveInApartment,
+  canLiveWithChild: dog.canLiveWithChild,
+  canLiveWithDog: dog.canLiveWithDog,
+  canLiveWithCat: dog.canLiveWithCat,
+  fosterNote: dog.fosterNote,
+});
 
-export function useDogRegisterForm() {
+export function useDogEditForm(dogId: number) {
   const router = useRouter();
-  const createDogMutation = useCreateDogMutation();
+  const dogDetailQuery = useDogDetailQuery(dogId);
+  const updateDogMutation = useUpdateDogMutation();
   const [submitErrorMessage, setSubmitErrorMessage] = useState<string | null>(null);
+  const dog = dogDetailQuery.data;
 
   const form = useForm<DogRegisterFormValues>({
     resolver: zodResolver(dogRegisterSchema),
     defaultValues,
     mode: "onChange",
   });
+
+  useEffect(() => {
+    if (!dog) {
+      return;
+    }
+
+    form.reset(createDefaultValues(dog));
+  }, [dog, form]);
 
   const values = useWatch({ control: form.control });
   const regionSido = values.regionSido ?? "";
@@ -62,15 +89,8 @@ export function useDogRegisterForm() {
     () => sigunguOptionsBySido[regionSido as keyof typeof sigunguOptionsBySido] ?? [],
     [regionSido]
   );
-  const canProceedByStep = useMemo(
-    () => ({
-      1: dogRegisterStepSchemas[1].safeParse(values).success,
-      2: dogRegisterStepSchemas[2].safeParse(values).success,
-      3: dogRegisterStepSchemas[3].safeParse(values).success,
-    }),
-    [values]
-  );
-  const canSubmit = dogRegisterSchema.safeParse(values).success && !createDogMutation.isPending;
+
+  const canSubmit = dogRegisterSchema.safeParse(values).success && !updateDogMutation.isPending;
   const fieldErrors = {
     imageUrls: form.formState.errors.imageUrls?.message,
     name: form.formState.errors.name?.message,
@@ -125,7 +145,8 @@ export function useDogRegisterForm() {
       return;
     }
 
-    const nextImageUrl = mockImageUrls[imageUrls.length] ?? `/mock/dogs/register-${imageUrls.length + 1}.jpg`;
+    const nextImageUrl =
+      mockImageUrls[imageUrls.length] ?? `/mock/dogs/register-${imageUrls.length + 1}.jpg`;
 
     updateField("imageUrls", [...imageUrls, nextImageUrl]);
   };
@@ -137,59 +158,69 @@ export function useDogRegisterForm() {
     );
   };
 
-  const validateStep = (step: DogRegisterStep) => {
-    return form.trigger(dogRegisterStepFields[step]);
+  const handleCancel = () => {
+    router.push(`/dogs/${dogId}`);
   };
 
-  const handleSubmitDogRegister = form.handleSubmit(async (formValues) => {
+  const handleSubmitDogEdit = form.handleSubmit(async (formValues) => {
+    if (!dog) {
+      setSubmitErrorMessage("강아지 정보를 불러오지 못했어요. 잠시 후 다시 시도해주세요.");
+      return;
+    }
+
     try {
       setSubmitErrorMessage(null);
-      const { dogId } = await createDogMutation.mutateAsync({
-        name: formValues.name,
-        gender: formValues.gender,
-        breed: formValues.breed,
-        regionSido: formValues.regionSido,
-        regionSigungu: formValues.regionSigungu,
-        weight: formValues.weight,
-        traits: formValues.traits,
-        walkAmount: formValues.walkAmount,
-        isToiletTrained: formValues.isToiletTrained,
-        barkingLevel: formValues.barkingLevel,
-        isSeparationAnxiety: formValues.isSeparationAnxiety,
-        canLiveInApartment: formValues.canLiveInApartment,
-        canLiveWithChild: formValues.canLiveWithChild,
-        canLiveWithDog: formValues.canLiveWithDog,
-        canLiveWithCat: formValues.canLiveWithCat,
-        isNeutered: false,
-        isVaccinated: false,
-        hasDisease: false,
-        diseaseDescription: null,
-        fosterNote: formValues.fosterNote ?? "",
-        imageUrls: formValues.imageUrls,
+      await updateDogMutation.mutateAsync({
+        dogId,
+        payload: {
+          name: formValues.name,
+          gender: formValues.gender,
+          breed: formValues.breed,
+          regionSido: formValues.regionSido,
+          regionSigungu: formValues.regionSigungu,
+          weight: formValues.weight,
+          traits: formValues.traits,
+          walkAmount: formValues.walkAmount,
+          isToiletTrained: formValues.isToiletTrained,
+          barkingLevel: formValues.barkingLevel,
+          isSeparationAnxiety: formValues.isSeparationAnxiety,
+          canLiveInApartment: formValues.canLiveInApartment,
+          canLiveWithChild: formValues.canLiveWithChild,
+          canLiveWithDog: formValues.canLiveWithDog,
+          canLiveWithCat: formValues.canLiveWithCat,
+          isNeutered: dog.isNeutered,
+          isVaccinated: dog.isVaccinated,
+          hasDisease: dog.hasDisease,
+          diseaseDescription: dog.diseaseDescription,
+          fosterNote: formValues.fosterNote ?? "",
+          imageUrls: formValues.imageUrls,
+        },
       });
 
       router.push(`/dogs/${dogId}`);
     } catch {
-      setSubmitErrorMessage("강아지 공고를 등록하지 못했어요. 잠시 후 다시 시도해주세요.");
+      setSubmitErrorMessage("강아지 정보를 수정하지 못했어요. 잠시 후 다시 시도해주세요.");
     }
   });
 
   return {
+    dog,
     form,
     values,
     fieldErrors,
     sigunguOptions,
-    isSubmitting: createDogMutation.isPending,
+    isLoading: dogDetailQuery.isLoading,
+    isError: dogDetailQuery.isError,
+    isSubmitting: updateDogMutation.isPending,
     submitErrorMessage,
-    canProceedByStep,
     canSubmit,
     updateField,
-    validateStep,
     handleRegionSidoChange,
     handleRegionSigunguChange,
     handleTraitToggle,
     handleAddImage,
     handleRemoveImage,
-    handleSubmitDogRegister,
+    handleCancel,
+    handleSubmitDogEdit,
   };
 }
