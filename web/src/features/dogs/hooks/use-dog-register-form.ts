@@ -71,6 +71,15 @@ export function useDogRegisterForm() {
     [values]
   );
   const canSubmit = dogRegisterSchema.safeParse(values).success && !createDogMutation.isPending;
+  const fieldErrors = {
+    imageUrls: form.formState.errors.imageUrls?.message,
+    name: form.formState.errors.name?.message,
+    breed: form.formState.errors.breed?.message,
+    regionSido: form.formState.errors.regionSido?.message,
+    regionSigungu: form.formState.errors.regionSigungu?.message,
+    weight: form.formState.errors.weight?.message,
+    traits: form.formState.errors.traits?.message,
+  };
 
   const updateField = <TKey extends Path<DogRegisterFormValues>>(
     field: TKey,
@@ -84,6 +93,8 @@ export function useDogRegisterForm() {
   };
 
   const handleRegionSidoChange = (value: string) => {
+    if (!value) return;
+
     setSubmitErrorMessage(null);
     form.setValue("regionSido", value, {
       shouldDirty: true,
@@ -95,6 +106,12 @@ export function useDogRegisterForm() {
     });
   };
 
+  const handleRegionSigunguChange = (value: string) => {
+    if (!value) return;
+
+    updateField("regionSigungu", value);
+  };
+
   const handleTraitToggle = (trait: DogTrait) => {
     const nextTraits = traits.includes(trait)
       ? traits.filter((selectedTrait) => selectedTrait !== trait)
@@ -104,6 +121,10 @@ export function useDogRegisterForm() {
   };
 
   const handleAddImage = () => {
+    if (imageUrls.length >= 3) {
+      return;
+    }
+
     const nextImageUrl = mockImageUrls[imageUrls.length] ?? `/mock/dogs/register-${imageUrls.length + 1}.jpg`;
 
     updateField("imageUrls", [...imageUrls, nextImageUrl]);
@@ -156,6 +177,7 @@ export function useDogRegisterForm() {
   return {
     form,
     values,
+    fieldErrors,
     sigunguOptions,
     isSubmitting: createDogMutation.isPending,
     submitErrorMessage,
@@ -164,6 +186,7 @@ export function useDogRegisterForm() {
     updateField,
     validateStep,
     handleRegionSidoChange,
+    handleRegionSigunguChange,
     handleTraitToggle,
     handleAddImage,
     handleRemoveImage,

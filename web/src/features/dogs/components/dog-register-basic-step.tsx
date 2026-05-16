@@ -31,6 +31,7 @@ type DogRegisterBasicStepProps = {
     value: PathValue<DogRegisterFormValues, TKey>
   ) => void;
   onRegionSidoChange: (value: string) => void;
+  onRegionSigunguChange: (value: string) => void;
   onAddImage: () => void;
   onRemoveImage: (imageUrl: string) => void;
   canGoNext: boolean;
@@ -48,6 +49,7 @@ export function DogRegisterBasicStep({
   sigunguOptions,
   onFieldChange,
   onRegionSidoChange,
+  onRegionSigunguChange,
   onAddImage,
   onRemoveImage,
   canGoNext,
@@ -147,7 +149,7 @@ export function DogRegisterBasicStep({
             value={values.regionSigungu}
             error={regionSigunguError}
             disabled={!values.regionSido}
-            onValueChange={(value) => onFieldChange("regionSigungu", value)}
+            onValueChange={onRegionSigunguChange}
           />
         </div>
       </section>

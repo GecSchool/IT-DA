@@ -11,8 +11,8 @@ export function DogRegisterForm() {
   const step = useDogRegisterStep();
   const dogRegisterForm = useDogRegisterForm();
   const {
-    form,
     values,
+    fieldErrors,
     sigunguOptions,
     isSubmitting,
     submitErrorMessage,
@@ -21,6 +21,7 @@ export function DogRegisterForm() {
     updateField,
     validateStep,
     handleRegionSidoChange,
+    handleRegionSigunguChange,
     handleTraitToggle,
     handleAddImage,
     handleRemoveImage,
@@ -51,15 +52,16 @@ export function DogRegisterForm() {
       {step.currentStep === 1 ? (
         <DogRegisterBasicStep
           values={values}
-          imageError={form.formState.errors.imageUrls?.message}
-          nameError={form.formState.errors.name?.message}
-          breedError={form.formState.errors.breed?.message}
-          regionSidoError={form.formState.errors.regionSido?.message}
-          regionSigunguError={form.formState.errors.regionSigungu?.message}
-          weightError={form.formState.errors.weight?.message}
+          imageError={fieldErrors.imageUrls}
+          nameError={fieldErrors.name}
+          breedError={fieldErrors.breed}
+          regionSidoError={fieldErrors.regionSido}
+          regionSigunguError={fieldErrors.regionSigungu}
+          weightError={fieldErrors.weight}
           sigunguOptions={sigunguOptions}
           onFieldChange={updateField}
           onRegionSidoChange={handleRegionSidoChange}
+          onRegionSigunguChange={handleRegionSigunguChange}
           onAddImage={handleAddImage}
           onRemoveImage={handleRemoveImage}
           canGoNext={canProceedByStep[1]}
@@ -70,7 +72,7 @@ export function DogRegisterForm() {
       {step.currentStep === 2 ? (
         <DogRegisterLifestyleStep
           values={values}
-          traitsError={form.formState.errors.traits?.message}
+          traitsError={fieldErrors.traits}
           onFieldChange={updateField}
           onTraitToggle={handleTraitToggle}
           canGoNext={canProceedByStep[2]}
