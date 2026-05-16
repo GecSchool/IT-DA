@@ -38,6 +38,7 @@ out/
 
 ### Secrets ###
 application-local.yml
+application-prod.yml
 .env
 .env.local
 
