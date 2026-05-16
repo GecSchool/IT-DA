@@ -1,12 +1,11 @@
-import type { DogDetail } from "@/features/dogs/types/dog";
 import { Text } from "@/shared/ui";
 
 type DogFosterNoteProps = {
-  dog: DogDetail;
+  fosterNote?: string | null;
 };
 
-export function DogFosterNote({ dog }: DogFosterNoteProps) {
-  if (!dog.fosterNote.trim()) {
+export function DogFosterNote({ fosterNote }: DogFosterNoteProps) {
+  if (!fosterNote?.trim()) {
     return null;
   }
 
@@ -16,7 +15,7 @@ export function DogFosterNote({ dog }: DogFosterNoteProps) {
         임시 보호자의 한마디
       </Text>
       <Text color="muted" className="break-keep leading-relaxed">
-        &quot;{dog.fosterNote}&quot;
+        &quot;{fosterNote}&quot;
       </Text>
     </section>
   );

@@ -60,7 +60,7 @@ export function DogDetailSection({ dogId }: DogDetailSectionProps) {
         onEdit={handleEditDog}
         onDelete={handleDeleteDog}
       />
-      <DogFosterNote dog={dog} />
+      <DogFosterNote fosterNote={dog.fosterNote} />
       <DogInfoSection dog={dog} />
       <AdoptionApplicationFormModal
         open={isApplicationModalOpen}
