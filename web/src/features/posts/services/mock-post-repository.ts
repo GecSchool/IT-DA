@@ -38,12 +38,16 @@ const mockCaptions = [
 const createMockPost = (index: number): PostDetail => {
   const postId = index + 1;
   const dog = mockDogs[index % mockDogs.length];
+  const imageCount = index % 4 === 0 ? 3 : index % 3 === 0 ? 2 : 1;
 
   return {
     postId,
     author: mockAuthors[index % mockAuthors.length],
     dog,
-    imageUrls: [`/mock/posts/post-${postId}.jpg`],
+    imageUrls: Array.from(
+      { length: imageCount },
+      (_, imageIndex) => `/mock/posts/post-${postId}-${imageIndex + 1}.jpg`
+    ),
     caption: mockCaptions[index],
     likeCount: 8 + index * 3,
     isLiked: index % 3 === 0,
@@ -119,6 +123,7 @@ export function createMockPostRepository(): PostRepository {
           name: post.dog.name,
         },
         thumbnailUrl: post.imageUrls[0] ?? "",
+        imageUrls: post.imageUrls,
         caption: post.caption,
         likeCount: post.likeCount,
         isLiked: post.isLiked,
@@ -212,7 +217,18 @@ export function createMockPostRepository(): PostRepository {
       };
       nextCommentId += 1;
 
-      mockComments[postId] = [comment, ...(mockComments[postId] ?? [])];
+      if (payload.parentId) {
+        mockComments[postId] = (mockComments[postId] ?? []).map((item) =>
+          item.commentId === payload.parentId
+            ? {
+                ...item,
+                replies: [...item.replies, { ...comment, parentId: payload.parentId }],
+              }
+            : item
+        );
+      } else {
+        mockComments[postId] = [comment, ...(mockComments[postId] ?? [])];
+      }
 
       return {
         commentId: comment.commentId,
@@ -223,9 +239,12 @@ export function createMockPostRepository(): PostRepository {
     },
 
     async deleteComment(postId, commentId) {
-      mockComments[postId] = (mockComments[postId] ?? []).filter(
-        (comment) => comment.commentId !== commentId
-      );
+      mockComments[postId] = (mockComments[postId] ?? [])
+        .filter((comment) => comment.commentId !== commentId)
+        .map((comment) => ({
+          ...comment,
+          replies: comment.replies.filter((reply) => reply.commentId !== commentId),
+        }));
     },
   };
 }

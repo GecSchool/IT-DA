@@ -1,6 +1,6 @@
 "use client";
 
-import type { InputHTMLAttributes, ReactNode } from "react";
+import { forwardRef, type InputHTMLAttributes, type ReactNode } from "react";
 
 import { cn } from "@/shared/lib/cn";
 import { Text } from "@/shared/ui/text";
@@ -11,19 +11,24 @@ type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> & {
   leftSlot?: ReactNode;
   rightSlot?: ReactNode;
   variant?: "default" | "ghost";
+  containerClassName?: string;
 };
 
-export function Input({
-  label,
-  error,
-  leftSlot,
-  rightSlot,
-  variant = "default",
-  className,
-  id,
-  disabled,
-  ...props
-}: InputProps) {
+export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
+  {
+    label,
+    error,
+    leftSlot,
+    rightSlot,
+    variant = "default",
+    containerClassName,
+    className,
+    id,
+    disabled,
+    ...props
+  },
+  ref
+) {
   const invalid = Boolean(error);
 
   return (
@@ -40,11 +45,13 @@ export function Input({
           variant === "ghost" && "bg-background",
           "focus-within:border-primary",
           invalid && "border-destructive focus-within:border-destructive",
-          disabled && "border-border bg-muted opacity-60"
+          disabled && "border-border bg-muted opacity-60",
+          containerClassName
         )}
       >
         {leftSlot}
         <input
+          ref={ref}
           id={id}
           disabled={disabled}
           aria-invalid={invalid || undefined}
@@ -63,4 +70,4 @@ export function Input({
       ) : null}
     </div>
   );
-}
+});
