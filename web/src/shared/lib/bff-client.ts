@@ -2,9 +2,8 @@ import axios from "axios";
 
 import { applyAuthInterceptors } from "@/shared/lib/auth-client";
 
-export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+export const bffClient = axios.create({
   withCredentials: true,
 });
 
-applyAuthInterceptors(apiClient);
+applyAuthInterceptors(bffClient);
