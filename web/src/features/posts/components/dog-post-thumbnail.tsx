@@ -7,14 +7,16 @@ import { PhotoTile, Text } from "@/shared/ui";
 
 type DogPostThumbnailProps = {
   post: DogPostSummary;
+  onViewPost: (postId: number) => void;
 };
 
-export function DogPostThumbnail({ post }: DogPostThumbnailProps) {
+export function DogPostThumbnail({ post, onViewPost }: DogPostThumbnailProps) {
   return (
     <button
       type="button"
       className="group relative w-full overflow-hidden rounded-m bg-muted text-left"
       aria-label={post.caption}
+      onClick={() => onViewPost(post.postId)}
     >
       <PhotoTile
         src={post.thumbnailUrl}

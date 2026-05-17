@@ -13,8 +13,10 @@ export type PostFeedItem = {
     name: string;
   };
   thumbnailUrl: string;
+  imageUrls: string[];
   caption: string;
   likeCount: number;
+  isLiked: boolean;
   commentCount: number;
   createdAt: string;
 };
@@ -70,4 +72,9 @@ export type CommentCreateResponse = {
   parentId: number | null;
   content: string;
   createdAt: string;
+};
+
+export type PostCommentReplyTarget = {
+  commentId: number;
+  authorNickname: string;
 };

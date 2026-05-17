@@ -1,17 +1,24 @@
 "use client";
 
 import { ArrowRight, ChevronLeft, X } from "lucide-react";
+import type { MouseEvent } from "react";
 
 import { PostCreateFormStep } from "@/features/posts/components/post-create-form-step";
 import { PostImagePreviewStep } from "@/features/posts/components/post-image-preview-step";
 import { PostImageUploadStep } from "@/features/posts/components/post-image-upload-step";
 import { usePostCreateModal } from "@/features/posts/hooks/use-post-create-modal";
+import { usePostModalBehavior } from "@/features/posts/hooks/use-post-modal-behavior";
 import { ImageCropStep } from "@/shared/components/image-uploader";
 import { Button, Divider, IconButton, Text } from "@/shared/ui";
 import { cn } from "@/shared/lib/cn";
 
 export function PostCreateModal() {
   const postCreate = usePostCreateModal();
+  usePostModalBehavior({
+    open: true,
+    onClose: postCreate.handleClose,
+  });
+
   const submitLabel = postCreate.step === "form" ? "게시" : "다음";
   const canClickPrimary =
     postCreate.step === "preview"
@@ -37,9 +44,16 @@ export function PostCreateModal() {
     }
   };
 
+  const handleOverlayClick = (event: MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      void postCreate.handleClose();
+    }
+  };
+
   return (
     <div
       className={cn("fixed inset-0 z-50 flex justify-center bg-overlay px-md", modalOffsetClass)}
+      onClick={handleOverlayClick}
     >
       <IconButton
         aria-label="게시물 작성 닫기"
@@ -50,8 +64,11 @@ export function PostCreateModal() {
         <X className="size-[18px]" aria-hidden />
       </IconButton>
 
-      <div className="flex h-fit w-full max-w-[580px] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg">
-        <header className="flex h-[69px] items-center justify-between gap-md px-lg">
+      <div
+        className="flex h-fit w-full max-w-[580px] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <header className="flex h-[69px] items-center justify-between gap-xs px-sm sm:gap-md sm:px-lg">
           <div className="flex w-[120px] items-center">
             <IconButton
               aria-label="이전 단계"

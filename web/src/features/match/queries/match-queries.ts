@@ -9,3 +9,10 @@ export function useMatchRecommendationQuery(lastDogId?: number) {
     queryFn: () => matchRepository.getRecommendation(lastDogId),
   });
 }
+
+export function useRecentMatchLogsQuery(limit = 3) {
+  return useQuery({
+    queryKey: matchQueryKeys.recentLogs(limit),
+    queryFn: () => matchRepository.getRecentMatchLogs(limit),
+  });
+}

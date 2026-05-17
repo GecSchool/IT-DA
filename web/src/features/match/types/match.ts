@@ -24,3 +24,12 @@ export type MatchRecommendation = {
   cautionReasons: string[];
   posts: DogPostSummary[];
 };
+
+export type RecentMatchLog = {
+  dogId: number;
+  name: string;
+  breed: string;
+  thumbnailUrl: string;
+  matchScore: number;
+  viewedAt: string;
+};
