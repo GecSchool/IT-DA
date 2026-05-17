@@ -15,6 +15,7 @@ import {
   type DogRegisterStep,
 } from "@/features/dogs/types/dog-register-form";
 import { sigunguOptionsBySido } from "@/shared/constants/region-options";
+import { useDogImageUpload } from "@/features/dogs/hooks/use-dog-image-upload";
 
 const defaultValues: DogRegisterFormValues = {
   imageUrls: [],
@@ -36,16 +37,11 @@ const defaultValues: DogRegisterFormValues = {
   fosterNote: "",
 };
 
-const mockImageUrls = [
-  "/mock/dogs/register-1.jpg",
-  "/mock/dogs/register-2.jpg",
-  "/mock/dogs/register-3.jpg",
-];
-
 export function useDogRegisterForm() {
   const router = useRouter();
   const createDogMutation = useCreateDogMutation();
   const [submitErrorMessage, setSubmitErrorMessage] = useState<string | null>(null);
+  const imageUpload = useDogImageUpload();
 
   const form = useForm<DogRegisterFormValues>({
     resolver: zodResolver(dogRegisterSchema),
@@ -125,9 +121,16 @@ export function useDogRegisterForm() {
       return;
     }
 
-    const nextImageUrl = mockImageUrls[imageUrls.length] ?? `/mock/dogs/register-${imageUrls.length + 1}.jpg`;
+    imageUpload.handleOpenImageUploadModal();
+  };
 
-    updateField("imageUrls", [...imageUrls, nextImageUrl]);
+  const handleCompleteImageUpload = (nextImageUrls: string[]) => {
+    updateField("imageUrls", [...imageUrls, ...nextImageUrls].slice(0, 3));
+  };
+
+  const handleCancel = async () => {
+    await imageUpload.cleanupUploadedImages();
+    router.push("/dogs");
   };
 
   const handleRemoveImage = (imageUrl: string) => {
@@ -170,6 +173,7 @@ export function useDogRegisterForm() {
 
       router.push(`/dogs/${dogId}`);
     } catch {
+      await imageUpload.cleanupUploadedImages();
       setSubmitErrorMessage("강아지 공고를 등록하지 못했어요. 잠시 후 다시 시도해주세요.");
     }
   });
@@ -179,6 +183,7 @@ export function useDogRegisterForm() {
     values,
     fieldErrors,
     sigunguOptions,
+    isImageUploadModalOpen: imageUpload.isImageUploadModalOpen,
     isSubmitting: createDogMutation.isPending,
     submitErrorMessage,
     canProceedByStep,
@@ -189,6 +194,10 @@ export function useDogRegisterForm() {
     handleRegionSigunguChange,
     handleTraitToggle,
     handleAddImage,
+    handleCloseImageUploadModal: imageUpload.handleCloseImageUploadModal,
+    handleUploadImage: imageUpload.handleUploadImage,
+    handleCompleteImageUpload,
+    handleCancel,
     handleRemoveImage,
     handleSubmitDogRegister,
   };

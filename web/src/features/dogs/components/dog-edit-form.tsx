@@ -12,6 +12,7 @@ import {
   toiletTrainingOptions,
   walkAmountOptions,
 } from "@/features/dogs/constants/dog-register-options";
+import { DogImageUploadModal } from "@/features/dogs/components/dog-image-upload-modal";
 import type { BarkingLevel, WalkAmount } from "@/features/dogs/types/dog";
 import type { DogRegisterFormValues } from "@/features/dogs/types/dog-register-form";
 import { useDogEditForm } from "@/features/dogs/hooks/use-dog-edit-form";
@@ -40,6 +41,7 @@ export function DogEditForm({ dogId }: DogEditFormProps) {
     values,
     fieldErrors,
     sigunguOptions,
+    isImageUploadModalOpen,
     isLoading,
     isError,
     isSubmitting,
@@ -50,6 +52,9 @@ export function DogEditForm({ dogId }: DogEditFormProps) {
     handleRegionSigunguChange,
     handleTraitToggle,
     handleAddImage,
+    handleCloseImageUploadModal,
+    handleUploadImage,
+    handleCompleteImageUpload,
     handleRemoveImage,
     handleCancel,
     handleSubmitDogEdit,
@@ -77,10 +82,11 @@ export function DogEditForm({ dogId }: DogEditFormProps) {
   const imageUrls = values.imageUrls ?? [];
 
   return (
-    <form className="flex w-full max-w-[560px] flex-col gap-[28px]" onSubmit={handleSubmitDogEdit}>
-      <Heading as="h1" size="lg">
-        {dog.name} 정보 수정
-      </Heading>
+    <>
+      <form className="flex w-full max-w-[560px] flex-col gap-[28px]" onSubmit={handleSubmitDogEdit}>
+        <Heading as="h1" size="lg">
+          {dog.name} 정보 수정
+        </Heading>
 
       <section className="flex w-full flex-col gap-[10px]">
         <Text size="md" weight="semibold">
@@ -263,6 +269,15 @@ export function DogEditForm({ dogId }: DogEditFormProps) {
           {isSubmitting ? "수정 중" : "수정 완료"}
         </Button>
       </div>
-    </form>
+      </form>
+      <DogImageUploadModal
+        open={isImageUploadModalOpen}
+        maxCount={3}
+        currentCount={imageUrls.length}
+        onClose={handleCloseImageUploadModal}
+        onUpload={handleUploadImage}
+        onComplete={handleCompleteImageUpload}
+      />
+    </>
   );
 }
