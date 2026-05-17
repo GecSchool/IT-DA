@@ -18,6 +18,7 @@ export function DogPostGridSection({ dogId }: DogPostGridSectionProps) {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
+    handleViewPost,
   } = useDogPostGridSection(dogId);
 
   if (isLoading) {
@@ -47,7 +48,7 @@ export function DogPostGridSection({ dogId }: DogPostGridSectionProps) {
 
   return (
     <section className="flex w-full flex-col gap-md">
-      <DogPostGrid posts={posts} />
+      <DogPostGrid posts={posts} onViewPost={handleViewPost} />
       {hasNextPage ? (
         <div className="flex justify-center">
           <Button

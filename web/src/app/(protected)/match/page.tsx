@@ -21,6 +21,7 @@ export default function MatchPage() {
     isApplying,
     isCurrentDogApplied,
     handleNextRecommendation,
+    handleViewPost,
     handleOpenApplicationModal,
     handleCloseApplicationModal,
     handleSubmitApplication,
@@ -77,7 +78,7 @@ export default function MatchPage() {
         </Button>
       </div>
       {recommendation.posts.length > 0 ? (
-        <DogPostGrid posts={recommendation.posts} />
+        <DogPostGrid posts={recommendation.posts} onViewPost={handleViewPost} />
       ) : (
         <EmptyState
           title="아직 게시물이 없어요"

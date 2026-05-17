@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { useCreateAdoptionMutation } from "@/features/adoptions/queries";
 import type { AdoptionApplicationFormValues } from "@/features/adoptions/types/adoption-application-form";
 import { useMatchRecommendationQuery } from "@/features/match/queries";
 
 export function useMatchDetailPage() {
+  const router = useRouter();
   const [lastDogId, setLastDogId] = useState<number>();
   const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
   const [appliedDogIds, setAppliedDogIds] = useState<Set<number>>(() => new Set());
@@ -35,6 +37,10 @@ export function useMatchDetailPage() {
     setLastDogId(recommendation.dogId);
   };
 
+  const handleViewPost = (postId: number) => {
+    router.push(`/posts/${postId}`, { scroll: false });
+  };
+
   const handleSubmitApplication = async (values: AdoptionApplicationFormValues) => {
     if (!recommendation) {
       return;
@@ -57,6 +63,7 @@ export function useMatchDetailPage() {
     isApplying: createAdoptionMutation.isPending,
     isCurrentDogApplied,
     handleNextRecommendation,
+    handleViewPost,
     handleOpenApplicationModal,
     handleCloseApplicationModal,
     handleSubmitApplication,
