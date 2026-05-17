@@ -1,20 +1,42 @@
 "use client";
 
-import { Heart, MessageCircle, MoreHorizontal } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart, MessageCircle, MoreHorizontal, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 import { useFeedPostLike } from "@/features/posts/hooks/use-feed-post-like";
+import { usePostImageCarousel } from "@/features/posts/hooks/use-post-image-carousel";
 import type { PostFeedItem } from "@/features/posts/types/post";
 import { cn } from "@/shared/lib/cn";
-import { IconButton, PhotoTile, Text } from "@/shared/ui";
+import { BottomSheet, BottomSheetItem, DropdownMenu, IconButton, PhotoTile, Text } from "@/shared/ui";
 
 type FeedPostCardProps = {
   post: PostFeedItem;
-  onViewPost: (postId: number) => void;
+  currentUserId: number | null;
+  isDeleting: boolean;
+  onViewPost: (postId: number, options?: { focusComment?: boolean }) => void;
   onViewDog: (dogId: number) => void;
+  onDeletePost: (postId: number) => void;
 };
 
-export function FeedPostCard({ post, onViewPost, onViewDog }: FeedPostCardProps) {
+export function FeedPostCard({
+  post,
+  currentUserId,
+  isDeleting,
+  onViewPost,
+  onViewDog,
+  onDeletePost,
+}: FeedPostCardProps) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isLiked, isToggling, handleToggleLike } = useFeedPostLike(post);
+  const imageCarousel = usePostImageCarousel({
+    imageUrls: post.imageUrls.length > 0 ? post.imageUrls : [post.thumbnailUrl],
+  });
+  const canManagePost = currentUserId === post.author.userId;
+
+  const handleMobileDelete = () => {
+    setIsMobileMenuOpen(false);
+    onDeletePost(post.postId);
+  };
 
   return (
     <article className="flex w-full max-w-[400px] flex-col">
@@ -39,24 +61,91 @@ export function FeedPostCard({ post, onViewPost, onViewDog }: FeedPostCardProps)
             {post.author.nickname}
           </Text>
         </div>
-        <IconButton aria-label="게시물 옵션" size="sm" variant="ghost">
-          <MoreHorizontal className="size-5" aria-hidden />
-        </IconButton>
+        {canManagePost ? (
+          <>
+            <div className="sm:hidden">
+              <IconButton
+                aria-label="게시물 옵션"
+                size="sm"
+                variant="ghost"
+                onClick={() => setIsMobileMenuOpen(true)}
+              >
+                <MoreHorizontal className="size-5" aria-hidden />
+              </IconButton>
+            </div>
+            <div className="hidden sm:block">
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger asChild>
+                  <IconButton aria-label="게시물 옵션" size="sm" variant="ghost">
+                    <MoreHorizontal className="size-5" aria-hidden />
+                  </IconButton>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content align="end">
+                  <DropdownMenu.Item
+                    variant="danger"
+                    disabled={isDeleting}
+                    onSelect={() => onDeletePost(post.postId)}
+                  >
+                    삭제하기
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
+            </div>
+            <BottomSheet
+              open={isMobileMenuOpen}
+              title="게시물 관리"
+              onOpenChange={setIsMobileMenuOpen}
+            >
+              <BottomSheetItem variant="danger" disabled={isDeleting} onClick={handleMobileDelete}>
+                삭제하기
+                <Trash2 className="size-5" aria-hidden />
+              </BottomSheetItem>
+            </BottomSheet>
+          </>
+        ) : null}
       </header>
 
-      <button
-        type="button"
-        aria-label="게시물 상세 보기"
-        className="w-full"
-        onClick={() => onViewPost(post.postId)}
-      >
+      <div className="group relative w-full">
         <PhotoTile
-          src={post.thumbnailUrl}
+          src={imageCarousel.currentImageUrl}
           alt={`${post.dog.name} 게시물 사진`}
           aspect="portrait"
           className="rounded-none md:rounded-m"
         />
-      </button>
+        <button
+          type="button"
+          aria-label="게시물 상세 보기"
+          className="absolute inset-0"
+          onClick={() => onViewPost(post.postId)}
+        />
+        {imageCarousel.hasMultipleImages ? (
+          <>
+            <IconButton
+              aria-label="이전 사진"
+              size="sm"
+              variant="ghost"
+              className="absolute left-2 top-1/2 z-10 size-7 -translate-y-1/2 bg-black/25 text-white opacity-90 hover:bg-black/35 md:opacity-0 md:group-hover:opacity-100"
+              onClick={imageCarousel.handlePreviousImage}
+            >
+              <ChevronLeft className="size-4" aria-hidden />
+            </IconButton>
+            <IconButton
+              aria-label="다음 사진"
+              size="sm"
+              variant="ghost"
+              className="absolute right-2 top-1/2 z-10 size-7 -translate-y-1/2 bg-black/25 text-white opacity-90 hover:bg-black/35 md:opacity-0 md:group-hover:opacity-100"
+              onClick={imageCarousel.handleNextImage}
+            >
+              <ChevronRight className="size-4" aria-hidden />
+            </IconButton>
+            <div className="absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 items-center rounded-pill bg-black/35 px-xs py-[2px]">
+              <Text size="xs" weight="semibold" className="text-white">
+                {imageCarousel.currentImageIndex + 1} / {imageCarousel.totalImageCount}
+              </Text>
+            </div>
+          </>
+        ) : null}
+      </div>
 
       <div className="flex flex-col gap-xs px-md py-sm md:px-0">
         <Text size="sm" className="leading-relaxed">
@@ -76,7 +165,11 @@ export function FeedPostCard({ post, onViewPost, onViewDog }: FeedPostCardProps)
             <Heart className={cn("size-4", isLiked && "fill-current")} aria-hidden />
             {post.likeCount}
           </button>
-          <button type="button" className="inline-flex items-center gap-1 text-xs font-medium">
+          <button
+            type="button"
+            className="inline-flex items-center gap-1 text-xs font-medium transition-colors hover:text-foreground"
+            onClick={() => onViewPost(post.postId, { focusComment: true })}
+          >
             <MessageCircle className="size-4" aria-hidden />
             {post.commentCount}
           </button>

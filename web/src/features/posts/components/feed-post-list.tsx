@@ -11,22 +11,28 @@ type FeedPostListProps = {
   posts: PostFeedItem[];
   isLoading: boolean;
   isError: boolean;
+  currentUserId: number | null;
+  isDeletingPost: boolean;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
   loadMoreRef: RefObject<HTMLDivElement | null>;
-  onViewPost: (postId: number) => void;
+  onViewPost: (postId: number, options?: { focusComment?: boolean }) => void;
   onViewDog: (dogId: number) => void;
+  onDeletePost: (postId: number) => void;
 };
 
 export function FeedPostList({
   posts,
   isLoading,
   isError,
+  currentUserId,
+  isDeletingPost,
   hasNextPage,
   isFetchingNextPage,
   loadMoreRef,
   onViewPost,
   onViewDog,
+  onDeletePost,
 }: FeedPostListProps) {
   if (isLoading) {
     return (
@@ -57,8 +63,11 @@ export function FeedPostList({
         <FeedPostCard
           key={post.postId}
           post={post}
+          currentUserId={currentUserId}
+          isDeleting={isDeletingPost}
           onViewPost={onViewPost}
           onViewDog={onViewDog}
+          onDeletePost={onDeletePost}
         />
       ))}
       <div ref={loadMoreRef} className="h-1 w-full" aria-hidden />

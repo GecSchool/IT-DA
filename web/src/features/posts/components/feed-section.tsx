@@ -13,11 +13,14 @@ export function FeedSection({ className }: FeedSectionProps) {
     posts,
     isLoading,
     isError,
+    currentUserId,
+    isDeletingPost,
     hasNextPage,
     isFetchingNextPage,
     loadMoreRef,
     handleViewDog,
     handleViewPost,
+    handleDeletePost,
   } = useFeedSection();
 
   return (
@@ -29,8 +32,11 @@ export function FeedSection({ className }: FeedSectionProps) {
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
         loadMoreRef={loadMoreRef}
+        currentUserId={currentUserId}
+        isDeletingPost={isDeletingPost}
         onViewPost={handleViewPost}
         onViewDog={handleViewDog}
+        onDeletePost={handleDeletePost}
       />
     </section>
   );
