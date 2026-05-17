@@ -28,6 +28,27 @@ const getNextLikeState = (isLiked: boolean, likeCount: number) => ({
   likeCount: likeCount + (isLiked ? -1 : 1),
 });
 
+const updateFeedPostLike = (current: FeedPostsData | undefined, postId: number) => {
+  if (!current) {
+    return current;
+  }
+
+  return {
+    ...current,
+    pages: current.pages.map((page) => ({
+      ...page,
+      posts: page.posts.map((post) =>
+        post.postId === postId
+          ? {
+              ...post,
+              ...getNextLikeState(post.isLiked, post.likeCount),
+            }
+          : post
+      ),
+    })),
+  };
+};
+
 export function useCreatePostMutation() {
   const queryClient = useQueryClient();
 
@@ -79,7 +100,9 @@ export function useTogglePostLikeMutation() {
       ]);
 
       const previousDetail = queryClient.getQueryData<PostDetail>(postQueryKeys.detail(postId));
-      const previousFeed = queryClient.getQueryData<FeedPostsData>(postQueryKeys.feed());
+      const previousFeedQueries = queryClient.getQueriesData<FeedPostsData>({
+        queryKey: postQueryKeys.feed(),
+      });
 
       queryClient.setQueryData<PostDetail>(postQueryKeys.detail(postId), (current) => {
         if (!current) {
@@ -92,38 +115,21 @@ export function useTogglePostLikeMutation() {
         };
       });
 
-      queryClient.setQueryData<FeedPostsData>(postQueryKeys.feed(), (current) => {
-        if (!current || !previousDetail) {
-          return current;
-        }
-
-        const nextLikeState = getNextLikeState(previousDetail.isLiked, previousDetail.likeCount);
-
-        return {
-          ...current,
-          pages: current.pages.map((page) => ({
-            ...page,
-            posts: page.posts.map((post) =>
-              post.postId === postId
-                ? {
-                    ...post,
-                    likeCount: nextLikeState.likeCount,
-                  }
-                : post
-            ),
-          })),
-        };
+      queryClient.setQueriesData<FeedPostsData>({ queryKey: postQueryKeys.feed() }, (current) => {
+        return updateFeedPostLike(current, postId);
       });
 
-      return { previousDetail, previousFeed };
+      return { previousDetail, previousFeedQueries };
     },
     onError: (_error, postId, context) => {
       if (context?.previousDetail) {
         queryClient.setQueryData(postQueryKeys.detail(postId), context.previousDetail);
       }
 
-      if (context?.previousFeed) {
-        queryClient.setQueryData(postQueryKeys.feed(), context.previousFeed);
+      if (context?.previousFeedQueries) {
+        context.previousFeedQueries.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data);
+        });
       }
     },
     onSettled: (_data, _error, postId) => {

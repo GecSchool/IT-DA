@@ -15,6 +15,7 @@ export type PostFeedItem = {
   thumbnailUrl: string;
   caption: string;
   likeCount: number;
+  isLiked: boolean;
   commentCount: number;
   createdAt: string;
 };
