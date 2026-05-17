@@ -1,5 +1,5 @@
 import type { MatchRepository } from "./match-repository";
-import type { MatchRecommendation } from "../types/match";
+import type { MatchRecommendation, RecentMatchLog } from "../types/match";
 
 const mockRecommendations: MatchRecommendation[] = [
   {
@@ -68,6 +68,15 @@ const mockRecommendations: MatchRecommendation[] = [
   },
 ];
 
+const mockRecentMatchLogs: RecentMatchLog[] = mockRecommendations.map((recommendation, index) => ({
+  dogId: recommendation.dogId,
+  name: recommendation.name,
+  breed: recommendation.breed,
+  thumbnailUrl: recommendation.imageUrls[0] ?? "",
+  matchScore: recommendation.matchScore,
+  viewedAt: new Date(Date.now() - index * 1000 * 60 * 30).toISOString(),
+}));
+
 export function createMockMatchRepository(): MatchRepository {
   return {
     async getRecommendation(lastDogId) {
@@ -75,6 +84,10 @@ export function createMockMatchRepository(): MatchRepository {
         mockRecommendations.find((item) => item.dogId !== lastDogId) ?? mockRecommendations[0];
 
       return nextRecommendation;
+    },
+
+    async getRecentMatchLogs(limit = 3) {
+      return mockRecentMatchLogs.slice(0, limit);
     },
   };
 }

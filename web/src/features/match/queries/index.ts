@@ -1,2 +1,2 @@
 export { matchQueryKeys } from "./match-query-keys";
-export { useMatchRecommendationQuery } from "./match-queries";
+export { useMatchRecommendationQuery, useRecentMatchLogsQuery } from "./match-queries";
