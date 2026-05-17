@@ -12,12 +12,9 @@ import {
   type DogRegisterFormValues,
 } from "@/features/dogs/types/dog-register-form";
 import { sigunguOptionsBySido } from "@/shared/constants/region-options";
-
-const mockImageUrls = [
-  "/mock/dogs/register-1.jpg",
-  "/mock/dogs/register-2.jpg",
-  "/mock/dogs/register-3.jpg",
-];
+import { useDogImageUpload } from "@/features/dogs/hooks/use-dog-image-upload";
+import { deleteImages } from "@/shared/lib/image-upload";
+import { getRemovedImageUrls, getUnusedUploadedImageUrls } from "@/shared/lib/image-list";
 
 const defaultValues: DogRegisterFormValues = {
   imageUrls: [],
@@ -64,6 +61,7 @@ export function useDogEditForm(dogId: number) {
   const dogDetailQuery = useDogDetailQuery(dogId);
   const updateDogMutation = useUpdateDogMutation();
   const [submitErrorMessage, setSubmitErrorMessage] = useState<string | null>(null);
+  const imageUpload = useDogImageUpload();
   const dog = dogDetailQuery.data;
 
   const form = useForm<DogRegisterFormValues>({
@@ -145,10 +143,11 @@ export function useDogEditForm(dogId: number) {
       return;
     }
 
-    const nextImageUrl =
-      mockImageUrls[imageUrls.length] ?? `/mock/dogs/register-${imageUrls.length + 1}.jpg`;
+    imageUpload.handleOpenImageUploadModal();
+  };
 
-    updateField("imageUrls", [...imageUrls, nextImageUrl]);
+  const handleCompleteImageUpload = (nextImageUrls: string[]) => {
+    updateField("imageUrls", [...imageUrls, ...nextImageUrls].slice(0, 3));
   };
 
   const handleRemoveImage = (imageUrl: string) => {
@@ -158,7 +157,8 @@ export function useDogEditForm(dogId: number) {
     );
   };
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
+    await imageUpload.cleanupUploadedImages();
     router.push(`/dogs/${dogId}`);
   };
 
@@ -197,8 +197,16 @@ export function useDogEditForm(dogId: number) {
         },
       });
 
+      const deletedExistingImageUrls = getRemovedImageUrls(dog.imageUrls, formValues.imageUrls);
+      const unusedNewImageUrls = getUnusedUploadedImageUrls(
+        imageUpload.uploadedImageUrls,
+        formValues.imageUrls
+      );
+      await deleteImages([...deletedExistingImageUrls, ...unusedNewImageUrls]).catch(() => null);
+
       router.push(`/dogs/${dogId}`);
     } catch {
+      await imageUpload.cleanupUploadedImages();
       setSubmitErrorMessage("강아지 정보를 수정하지 못했어요. 잠시 후 다시 시도해주세요.");
     }
   });
@@ -209,6 +217,7 @@ export function useDogEditForm(dogId: number) {
     values,
     fieldErrors,
     sigunguOptions,
+    isImageUploadModalOpen: imageUpload.isImageUploadModalOpen,
     isLoading: dogDetailQuery.isLoading,
     isError: dogDetailQuery.isError,
     isSubmitting: updateDogMutation.isPending,
@@ -219,6 +228,9 @@ export function useDogEditForm(dogId: number) {
     handleRegionSigunguChange,
     handleTraitToggle,
     handleAddImage,
+    handleCloseImageUploadModal: imageUpload.handleCloseImageUploadModal,
+    handleUploadImage: imageUpload.handleUploadImage,
+    handleCompleteImageUpload,
     handleRemoveImage,
     handleCancel,
     handleSubmitDogEdit,
