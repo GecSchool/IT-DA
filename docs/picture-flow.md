@@ -3,17 +3,32 @@
 ## 기본 원칙
 
 - 클라이언트는 이미지를 Next.js 서버(Route Handler)에 업로드한다.
-- Next.js 서버는 accessToken 유효성을 확인한 뒤 S3에 이미지를 업로드한다.
+- Next.js 서버는 `JWT_SECRET`으로 accessToken을 직접 검증한 뒤 S3에 이미지를 업로드한다.
+- 이미지 조회 URL은 CloudFront URL을 사용한다.
 - Spring 백엔드는 이미지 파일 바이너리를 받지 않고, 이미지 URL만 저장한다.
 - 이미지에는 별도 `imageId`를 두지 않고, `imageUrl`을 식별값처럼 사용한다.
 - 같은 강아지 또는 게시물 안에서 중복 `imageUrl`은 허용하지 않는다.
 - 대표 이미지는 `sort_order`가 가장 작은 이미지다.
 
+## 환경 변수
+
+```env
+AWS_REGION=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_S3_BUCKET_NAME=
+AWS_CLOUDFRONT_URL=
+JWT_SECRET=
+```
+
+S3 key는 `domain/yyyy/mm/{uuid}.{ext}` 형식으로 생성한다.
+`JWT_SECRET`은 Spring 백엔드가 accessToken 발급에 사용하는 HS256 secret과 동일해야 한다.
+
 ## 등록 흐름
 
 ```text
 클라이언트 -> Next.js 서버(Route Handler)
-           -> accessToken 유효성 확인
+           -> JWT secret으로 accessToken 검증
            -> S3 업로드
            <- imageUrl 반환
 
